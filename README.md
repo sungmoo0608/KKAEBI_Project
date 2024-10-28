@@ -1,5 +1,7 @@
 # KKAEBI_Project
-KKAEBI_Project
+  
+  * 돈 나와라 뚝딱 도깨비 뱅크
+  * 깨비조
 
 ## 프로젝트 주제
   
