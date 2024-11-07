@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ict.ex.simulation.mapper.SavingProductMapper">
+
+	<select id="getSavingProductList" resultType="edu.ict.ex.simulation.vo.SavingProductVO"> <!-- 리스트 -->
+		<![CDATA[
+			select * from saving_products
+		]]>
+	</select>
+	
+	<!-- read(String pno); -->
+	<select id="read" resultMap="savingProductMap">
+    	<![CDATA[
+			select * from saving_products, saving_products_rates
+	        where saving_products.fin_prdt_cd = saving_products_rates.fin_prdt_cd
+	        and saving_products.fin_prdt_cd = #{pcd}
+        ]]>
+    </select>
+
+	<resultMap id="savingProductRatesMap"
+		type="edu.ict.ex.simulation.vo.SavingProductRatesVO">
+		<result property="fin_prdt_cd" column="fin_prdt_cd" />
+		<result property="intr_rate_type" column="intr_rate_type" />
+		<result property="intr_rate_type_nm" column="intr_rate_type_nm" />
+		<result property="save_trm" column="save_trm" />
+		<result property="intr_rate" column="intr_rate" />
+		<result property="intr_rate2" column="intr_rate2" />
+	</resultMap>
+
+	<resultMap id="savingProductMap"
+		type="edu.ict.ex.simulation.vo.SavingProductVO">
+		<result property="fin_co_no" column="fin_co_no" />
+		<result property="fin_prdt_cd" column="fin_prdt_cd" />
+		<result property="kor_co_nm" column="kor_co_nm" />
+		<result property="fin_prdt_nm" column="fin_prdt_nm" />
+		<result property="join_way" column="join_way" />
+		<result property="mtrt_int" column="mtrt_int" />
+		<result property="spcl_cnd" column="spcl_cnd" />
+		<result property="join_deny" column="join_deny" />
+		<result property="join_member" column="join_member" />
+		<result property="etc_note" column="etc_note" />
+		<result property="max_limit" column="max_limit" />
+		<association property="productRates" resultMap="savingProductRatesMap"></association>
+	</resultMap>
+	
+	<resultMap id="savingProductOptionMap"
+		type="edu.ict.ex.simulation.vo.join.SavingProductOptionVO">
+		<association property="savingProduct" resultMap="savingProductMap"></association>
+		<association property="savingProductRates" resultMap="savingProductRatesMap"></association>
+	</resultMap>
+
+	<select id="getSavingProductOptionList" resultMap="savingProductOptionMap"> <!-- 리스트 -->
+		<![CDATA[
+			select * from saving_products sp INNER JOIN saving_products_rates spr ON sp.fin_prdt_cd = spr.fin_prdt_cd
+		]]>
+	</select>
+
+</mapper>
