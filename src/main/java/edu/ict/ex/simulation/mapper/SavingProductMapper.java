@@ -11,7 +11,7 @@ import edu.ict.ex.simulation.vo.SavingProductVO;
 @Mapper
 public interface SavingProductMapper  {
 	
-	SavingProductVO read(String pcd);
+	SavingProductVO read(String finprdtcd);
 	
 	public List<SavingProductVO> getSavingProductList();
 	

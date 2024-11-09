@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import edu.ict.ex.simulation.mapper.SavingProductMapper;
 import edu.ict.ex.simulation.vo.SavingProductRatesVO;
 import edu.ict.ex.simulation.vo.SavingProductVO;
-import edu.ict.ex.simulation.vo.join.SavingProductOptionVO;
 
 @Service
 public class SavingProductService {
@@ -21,14 +20,14 @@ public class SavingProductService {
         return savingProductMapper.getSavingProductList();
     }
     
-	public SavingProductVO get(String pcd) {
+	public SavingProductVO get(String finprdtcd) {
 		
 		System.out.println("get()..");
 		
 		SavingProductVO savingProduct = new SavingProductVO();
-		savingProduct.setFinprdtcd(pcd);
+		savingProduct.setFinprdtcd(finprdtcd);
 		
-		return savingProductMapper.read(pcd);
+		return savingProductMapper.read(finprdtcd);
 	}
     
 	//조인 처리 - 추천 방법

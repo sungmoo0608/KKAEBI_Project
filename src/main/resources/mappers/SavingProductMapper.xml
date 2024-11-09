@@ -14,7 +14,7 @@
     	<![CDATA[
 			select * from saving_products, saving_products_rates
 	        where saving_products.finprdtcd = saving_products_rates.finprdtcd
-	        and saving_products.finprdtcd = #{pcd}
+	        and saving_products.finprdtcd = #{finprdtcd}
         ]]>
     </select>
 
