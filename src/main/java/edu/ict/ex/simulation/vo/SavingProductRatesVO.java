@@ -7,14 +7,14 @@ import lombok.Setter;
 import lombok.ToString;
 
 //적금 상품 이자율
-//이름                널?       유형           
-//----------------- -------- ------------ 
-//FIN_PRDT_CD       NOT NULL VARCHAR2(50) 
-//INTR_RATE_TYPE    NOT NULL VARCHAR2(1)  
-//INTR_RATE_TYPE_NM NOT NULL VARCHAR2(50) 
-//SAVE_TRM          NOT NULL NUMBER(3)    
-//INTR_RATE         NOT NULL NUMBER(5,2)  
-//INTR_RATE2                 NUMBER(5,2)  
+//이름             널?       유형           
+//-------------- -------- ------------ 
+//FINPRDTCD      NOT NULL VARCHAR2(50) 
+//INTRRATETYPE   NOT NULL VARCHAR2(1)  
+//INTRRATETYPENM NOT NULL VARCHAR2(50) 
+//SAVETRM        NOT NULL NUMBER(3)    
+//INTRRATE       NOT NULL NUMBER(5,2)  
+//INTRRATE2               NUMBER(5,2)  
 
 @Getter
 @Setter
@@ -24,11 +24,11 @@ import lombok.ToString;
 
 public class SavingProductRatesVO  {
 	
-    private String fin_prdt_cd;
-    private String intr_rate_type;
-    private String intr_rate_type_nm;
-    private int save_trm;
-    private double intr_rate;
-    private double intr_rate2;
+    private String finprdtcd;
+    private String intrratetype;
+    private String intrratetypenm;
+    private int savetrm;
+    private double intrrate;
+    private double intrrate2;
 	
 }

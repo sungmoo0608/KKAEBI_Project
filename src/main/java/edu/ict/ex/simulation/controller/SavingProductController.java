@@ -29,13 +29,12 @@ public class SavingProductController {
 	}
 	
 	@GetMapping("/products_view")
-	public String content_view(SavingProductVO savingProductVO,Model model) {
+	public String products_view(SavingProductVO savingProductVO,Model model) {
 		
 		log.info("products_view()..");
 		
-		model.addAttribute("products_view",savingProductService.get(savingProductVO.getFin_prdt_cd()));
+		model.addAttribute("products_view",savingProductService.get(savingProductVO.getFinprdtcd()));
 		return "savings/products_view";
 	}
-	
 	
 }

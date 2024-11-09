@@ -13,7 +13,7 @@
       <form action="${pageContext.request.contextPath}/board/modify" method="post">
           <tr>
             <td>상품명</td>
-            <td>${savingProductOptionMap.savingProduct.fin_prdt_nm}</td>      
+            <td>${savingProductOptionMap.savingProduct.finprdtnm}</td>      
          </tr>
 <%--           <tr>
             <td>가입 방법</td>

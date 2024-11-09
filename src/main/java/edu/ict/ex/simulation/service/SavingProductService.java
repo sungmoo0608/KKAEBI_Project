@@ -26,7 +26,7 @@ public class SavingProductService {
 		System.out.println("get()..");
 		
 		SavingProductVO savingProduct = new SavingProductVO();
-		savingProduct.setFin_prdt_cd(pcd);
+		savingProduct.setFinprdtcd(pcd);
 		
 		return savingProductMapper.read(pcd);
 	}

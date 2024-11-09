@@ -18,10 +18,10 @@
 		<c:forEach var="product" items="${getSavingProductList}">
 		<tr>
 		
-			<td>${product.kor_co_nm}</td>
-			<td>${product.fin_prdt_nm}</td>
-			<td>${product.join_way}</td>
-			<td><a href="${pageContext.request.contextPath}/savings/products_view?fin_prdt_cd=${product.fin_prdt_cd}">자세히 보기</a></td>
+			<td>${product.korconm}</td>
+			<td>${product.finprdtnm}</td>
+			<td>${product.joinway}</td>
+			<td><a href="${pageContext.request.contextPath}/savings/products_view?finprdtcd=${product.finprdtcd}">자세히 보기</a></td>
 
 		</tr>
 		</c:forEach>

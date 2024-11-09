@@ -13,34 +13,34 @@
 	<select id="read" resultMap="savingProductMap">
     	<![CDATA[
 			select * from saving_products, saving_products_rates
-	        where saving_products.fin_prdt_cd = saving_products_rates.fin_prdt_cd
-	        and saving_products.fin_prdt_cd = #{pcd}
+	        where saving_products.finprdtcd = saving_products_rates.finprdtcd
+	        and saving_products.finprdtcd = #{pcd}
         ]]>
     </select>
 
 	<resultMap id="savingProductRatesMap"
 		type="edu.ict.ex.simulation.vo.SavingProductRatesVO">
-		<result property="fin_prdt_cd" column="fin_prdt_cd" />
-		<result property="intr_rate_type" column="intr_rate_type" />
-		<result property="intr_rate_type_nm" column="intr_rate_type_nm" />
-		<result property="save_trm" column="save_trm" />
-		<result property="intr_rate" column="intr_rate" />
-		<result property="intr_rate2" column="intr_rate2" />
+		<result property="finprdtcd" column="finprdtcd" />
+		<result property="intrratetype" column="intrratetype" />
+		<result property="intrratetypenm" column="intrratetypenm" />
+		<result property="savetrm" column="savetrm" />
+		<result property="intrrate" column="intrrate" />
+		<result property="intrrate2" column="intrrate2" />
 	</resultMap>
 
 	<resultMap id="savingProductMap"
 		type="edu.ict.ex.simulation.vo.SavingProductVO">
-		<result property="fin_co_no" column="fin_co_no" />
-		<result property="fin_prdt_cd" column="fin_prdt_cd" />
-		<result property="kor_co_nm" column="kor_co_nm" />
-		<result property="fin_prdt_nm" column="fin_prdt_nm" />
-		<result property="join_way" column="join_way" />
-		<result property="mtrt_int" column="mtrt_int" />
-		<result property="spcl_cnd" column="spcl_cnd" />
-		<result property="join_deny" column="join_deny" />
-		<result property="join_member" column="join_member" />
-		<result property="etc_note" column="etc_note" />
-		<result property="max_limit" column="max_limit" />
+		<result property="fincono" column="fincono" />
+		<result property="finprdtcd" column="finprdtcd" />
+		<result property="korconm" column="korconm" />
+		<result property="finprdtnm" column="finprdtnm" />
+		<result property="joinway" column="joinway" />
+		<result property="mtrtint" column="mtrtint" />
+		<result property="spclcnd" column="spclcnd" />
+		<result property="joindeny" column="joindeny" />
+		<result property="joinmember" column="joinmember" />
+		<result property="etcnote" column="etcnote" />
+		<result property="maxlimit" column="maxlimit" />
 		<association property="productRates" resultMap="savingProductRatesMap"></association>
 	</resultMap>
 	
@@ -52,7 +52,7 @@
 
 	<select id="getSavingProductOptionList" resultMap="savingProductOptionMap"> <!-- 리스트 -->
 		<![CDATA[
-			select * from saving_products sp INNER JOIN saving_products_rates spr ON sp.fin_prdt_cd = spr.fin_prdt_cd
+			select * from saving_products sp INNER JOIN saving_products_rates spr ON sp.finprdtcd = spr.finprdtcd
 		]]>
 	</select>
 
