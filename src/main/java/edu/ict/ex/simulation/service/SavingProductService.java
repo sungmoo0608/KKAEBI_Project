@@ -6,8 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.ict.ex.simulation.mapper.SavingProductMapper;
-import edu.ict.ex.simulation.vo.SavingProductRatesVO;
+import edu.ict.ex.simulation.page.Criteria;
 import edu.ict.ex.simulation.vo.SavingProductVO;
+import edu.ict.ex.simulation.vo.join.SavingProductOptionVO;
 
 @Service
 public class SavingProductService {
@@ -16,7 +17,7 @@ public class SavingProductService {
     private SavingProductMapper savingProductMapper;
     
     public List<SavingProductVO> getSavingProductList() {
-    	System.out.println("getFinProductList() ..");
+    	System.out.println("getSavingProductList() ..");
         return savingProductMapper.getSavingProductList();
     }
     
@@ -29,9 +30,18 @@ public class SavingProductService {
 		
 		return savingProductMapper.read(finprdtcd);
 	}
-    
+	
+	public int getTotal() {            
+		return savingProductMapper.getTotalCount();
+	}
+
+
+	public List<SavingProductVO> getListWithPaging(Criteria cri) {      
+		return savingProductMapper.getListWithPaging(cri);
+	}
+	
 	//조인 처리 - 추천 방법
-	public List<SavingProductRatesVO> getSavingProductOptionList() {
+	public List<SavingProductOptionVO> getSavingProductOptionList() {
 		return savingProductMapper.getSavingProductOptionList();
 	}
     

@@ -2,6 +2,7 @@ package edu.ict.ex.simulation.vo;
 
 import java.util.List;
 
+import edu.ict.ex.simulation.page.PageVO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,21 +31,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 
-public class SavingProductVO  {
-	
-    private int fincono;
-    private String finprdtcd;
-    private String korconm;
-    private String finprdtnm;
-    private String joinway;
-    private String mtrtint;
-    private String spclcnd;
-    private int joindeny;
-    private String joinmember;
-    private String etcnote;
-    private long maxlimit;
-    
-    private List<SavingProductRatesVO> productRates;
-
+public class SavingProductPageVO  {
+ 
+    private List<SavingProductVO> product;
+    private PageVO page;
     
 }

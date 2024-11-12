@@ -3,30 +3,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.ict.ex.simulation.mapper.SavingProductMapper">
 
-	<select id="getSavingProductList" resultType="edu.ict.ex.simulation.vo.SavingProductVO"> <!-- 리스트 -->
-		<![CDATA[
-			select * from saving_products
-		]]>
-	</select>
-	
-	<!-- read(String pno); -->
-	<select id="read" resultMap="savingProductMap">
-    	<![CDATA[
-			select * from saving_products, saving_products_rates
-	        where saving_products.finprdtcd = saving_products_rates.finprdtcd
-	        and saving_products.finprdtcd = #{finprdtcd}
+    <select id="getTotalCount" resultType="int">
+       <![CDATA[
+           select count(*) from SAVING_PRODUCTS
         ]]>
     </select>
 
-	<resultMap id="savingProductRatesMap"
-		type="edu.ict.ex.simulation.vo.SavingProductRatesVO">
-		<result property="finprdtcd" column="finprdtcd" />
-		<result property="intrratetype" column="intrratetype" />
-		<result property="intrratetypenm" column="intrratetypenm" />
-		<result property="savetrm" column="savetrm" />
-		<result property="intrrate" column="intrrate" />
-		<result property="intrrate2" column="intrrate2" />
-	</resultMap>
+    <select id="getListWithPaging" resultType="edu.ict.ex.simulation.vo.SavingProductVO">
+       <![CDATA[
+	        SELECT * FROM (
+	              SELECT ROWNUM AS RNUM, A.* FROM (
+	                          SELECT *  FROM SAVING_PRODUCTS order by FINPRDTCD
+	                ) A WHERE ROWNUM <= #{pageNum} * #{amount}
+	         ) WHERE RNUM > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
 
 	<resultMap id="savingProductMap"
 		type="edu.ict.ex.simulation.vo.SavingProductVO">
@@ -44,12 +35,37 @@
 		<association property="productRates" resultMap="savingProductRatesMap"></association>
 	</resultMap>
 	
+	<resultMap id="savingProductRatesMap"
+		type="edu.ict.ex.simulation.vo.SavingProductRatesVO">
+		<result property="finprdtcd" column="finprdtcd" />
+		<result property="intrratetype" column="intrratetype" />
+		<result property="intrratetypenm" column="intrratetypenm" />
+		<result property="savetrm" column="savetrm" />
+		<result property="intrrate" column="intrrate" />
+		<result property="intrrate2" column="intrrate2" />
+	</resultMap>
+
 	<resultMap id="savingProductOptionMap"
 		type="edu.ict.ex.simulation.vo.join.SavingProductOptionVO">
 		<association property="savingProduct" resultMap="savingProductMap"></association>
 		<association property="savingProductRates" resultMap="savingProductRatesMap"></association>
 	</resultMap>
+	
+	<!-- read(String finprdtcd); -->
+	<select id="read" resultMap="savingProductMap">
+    	<![CDATA[
+			select * from saving_products, saving_products_rates
+	        where saving_products.finprdtcd = saving_products_rates.finprdtcd
+	        and saving_products.finprdtcd = #{finprdtcd}
+        ]]>
+    </select>
 
+	<select id="getSavingProductList" resultType="edu.ict.ex.simulation.vo.SavingProductVO"> <!-- 리스트 -->
+		<![CDATA[
+			select * from saving_products
+		]]>
+	</select>
+	
 	<select id="getSavingProductOptionList" resultMap="savingProductOptionMap"> <!-- 리스트 -->
 		<![CDATA[
 			select * from saving_products sp INNER JOIN saving_products_rates spr ON sp.finprdtcd = spr.finprdtcd
