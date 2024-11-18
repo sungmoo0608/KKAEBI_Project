@@ -11,7 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import edu.ict.ex.simulation.service.CustomUserDetailsService;
+import edu.ict.ex.simulation.usecurity.CustomUserDetailsService;
 
 @Configuration		//@Component + 설정
 @EnableWebSecurity	//필터 등록 = 시큐리티 설정 파일이다 라고 알려주는 역할
@@ -54,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .usernameParameter("userid")
             .passwordParameter("password")
             .failureUrl("/login?error=true") // 로그인 실패 시 에러 페이지
-            .defaultSuccessUrl("/"); // 로그인 후 loginInfo로 리디렉션
+            .defaultSuccessUrl("/loginInfo"); // 로그인 후 loginInfo로 리디렉션
 
         
 	}

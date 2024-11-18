@@ -1,10 +1,8 @@
 package edu.ict.ex.simulation.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import edu.ict.ex.simulation.mapper.UserMapper;
 import edu.ict.ex.simulation.vo.UserVO;
@@ -14,5 +12,12 @@ public class UserService {
 
     @Autowired
     private UserMapper userMapper;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
+    public UserVO getUserById(String user_id) {
+        UserVO user = userMapper.getUser(user_id);
+       return user;
+    }
 }

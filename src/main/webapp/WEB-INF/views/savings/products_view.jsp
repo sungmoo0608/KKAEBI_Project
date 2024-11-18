@@ -28,10 +28,6 @@
 				<td>우대조건</td>
 				<td>${products_view.spclcnd}</td>
 			</tr>
-			<tr>
-				<td>저축 기간</td>
-				<td>${save_trm}</td>
-			</tr>
 		<tr>
 			<td colspan="2"><input type="submit" value="수정"> &nbsp;&nbsp;<a href="${pageContext.request.contextPath}/savings/list">목록보기</a></td>
 		</tr>

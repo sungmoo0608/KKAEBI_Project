@@ -30,12 +30,13 @@ public class SavingProductService {
 		
 		return savingProductMapper.read(finprdtcd);
 	}
-	
+
+	//페이징 설정1
 	public int getTotal() {            
 		return savingProductMapper.getTotalCount();
 	}
-
-
+	
+	//페이징 설정2
 	public List<SavingProductVO> getListWithPaging(Criteria cri) {      
 		return savingProductMapper.getListWithPaging(cri);
 	}

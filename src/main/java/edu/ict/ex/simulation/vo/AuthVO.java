@@ -15,7 +15,7 @@ import lombok.ToString;
 
 public class AuthVO  {
 	
-	private String userid;
+	private String user_id;
 	private String authority;
 	
 }

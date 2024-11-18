@@ -66,7 +66,7 @@
 		]]>
 	</select>
 	
-	<select id="getSavingProductOptionList" resultMap="savingProductOptionMap"> <!-- 리스트 -->
+	<select id="getSavingProductOptionList" resultMap="savingProductMap"> <!-- 리스트 -->
 		<![CDATA[
 			select * from saving_products sp INNER JOIN saving_products_rates spr ON sp.finprdtcd = spr.finprdtcd
 		]]>
