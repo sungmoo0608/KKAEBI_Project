@@ -1,11 +1,11 @@
 package edu.ict.ex.simulation.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
+import org.mybatis.spring.annotation.MapperScan;
 
 import edu.ict.ex.simulation.vo.UserVO;
 
 //마이바티스용 인터페이스라는걸 알려주는 애노테이션
-@Mapper
+@MapperScan("edu.ict.ex.simulation.mapper")
 public interface UserMapper  {
 	
 	UserVO getUser(String user_id);

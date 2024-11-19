@@ -1,4 +1,4 @@
-package com.hosing.back;
+package edu.ict.ex.login;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
