@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.ict.ex.goods.mapper.GoodsMapper">
+	<select id="getGoodsList"
+		resultType="edu.ict.ex.goods.vo.GoodsVO">
+		SELECT * FROM GOODS_MAS
+	</select>
+
+	<!-- 상품 진열 상태 바꾸기 -->
+	<update id="display">
+		<![CDATA[
+			UPDATE goods_mas
+			SET goods_status = CASE
+            WHEN goods_status = 1 THEN 9
+            WHEN goods_status = 9 THEN 1
+            END
+			WHERE goods_code = #{goods_code}
+		]]>
+	</update>
+
+	<!-- 상품 삭제 -->
+	<delete id="delete">
+		<![CDATA[
+			delete FROM GOODS_MAS where
+			goods_code = #{goodscode}
+		]]>
+	</delete>
+
+	<!-- 상품 정보 수정 -->
+	<update id="modifyGoods">
+		<![CDATA[
+			update GOODS_MAS set 
+			goods_gubun = #{goods_gubun},
+			provider_code = #{provider_code},
+			goods_name = #{goods_name},
+			orign_code = #{orign_code},
+			period_mm = #{period_mm},
+			invest_gubun = #{invest_gubun},
+			forignexg_kind = #{forignexg_kind},
+			tran_unit = #{tran_unit},
+			goods_status = #{goods_status}
+			where goods_code = #{goods_code}		
+		]]>
+	</update>
+
+	<!-- 상품 추가 -->
+	<insert id="insertGoods">
+    	<![CDATA[
+    		insert into GOODS_MAS 
+    		(goods_code, goods_gubun, provider_code, 
+    		goods_name, orign_code, period_mm, 
+    		invest_gubun, forignexg_kind, tran_unit, goods_status) 
+    		values 
+    		(
+    		#{goods_code}, 
+    		#{goods_gubun}, 
+    		#{provider_code}, 
+    		#{goods_name}, 
+    		#{orign_code}, 
+    		#{period_mm},  
+    		#{invest_gubun}, 
+    		#{forignexg_kind}, 
+    		#{tran_unit}, 
+    		#{goods_status} 
+    		)
+    	]]>
+	</insert>
+
+	<!-- 상품VO -->
+	<resultMap id="goodsMap" type="GoodsVO">
+		<result property="goods_code" column="goods_code" />
+		<result property="goods_gubun" column="goods_gubun" />
+		<result property="provider_code" column="provider_code" />
+		<result property="goods_name" column="goods_name" />
+		<result property="orign_code" column="orign_code" />
+		<result property="period_mm" column="period_mm" />
+		<result property="invest_gubun" column="invest_gubun" />
+		<result property="forignexg_kind" column="forignexg_kind" />
+		<result property="tran_unit" column="tran_unit" />
+		<result property="goods_status" column="goods_status" />
+	</resultMap>
+
+	<!-- 예금상품 GoodsDepositListVO -->
+	<resultMap id="goodsDepositListMap" type="GoodsDepositListVO">
+		<result property="goods_code" column="goods_code" />
+		<result property="goods_gubun" column="goods_gubun" />
+		<result property="provider_code" column="provider_code" />
+		<result property="goods_name" column="goods_name" />
+		<result property="orign_code" column="orign_code" />
+		<result property="period_mm" column="period_mm" />
+		<result property="invest_gubun" column="invest_gubun" />
+		<result property="forignexg_kind" column="forignexg_kind" />
+		<result property="tran_unit" column="tran_unit" />
+		<result property="goods_status" column="goods_status" />
+		<association property="interestRate" resultMap="interestRateMap"></association>
+		<association property="provider" resultMap="providerMap"></association>
+	</resultMap>
+
+	<!-- 예금 상품 금리 VO -->
+	<resultMap id="interestRateMap" type="InterestrateVO">
+		<result property="goods_code" column="goods_code" />
+		<result property="period_mm" column="period_mm" />
+		<result property="status" column="status" />
+		<result property="interest_rate" column="interest_rate" />
+	</resultMap>
+
+	<!-- 펀드상품 GoodsFundListVO -->
+	<resultMap id="goodsFundListMap" type="GoodsFundListVO">
+		<result property="goods_code" column="goods_code" />
+		<result property="goods_gubun" column="goods_gubun" />
+		<result property="provider_code" column="provider_code" />
+		<result property="goods_name" column="goods_name" />
+		<result property="orign_code" column="orign_code" />
+		<result property="period_mm" column="period_mm" />
+		<result property="invest_gubun" column="invest_gubun" />
+		<result property="forignexg_kind" column="forignexg_kind" />
+		<result property="tran_unit" column="tran_unit" />
+		<result property="goods_status" column="goods_status" />
+		<association property="baseprice" resultMap="basepriceMap"></association>
+		<association property="provider" resultMap="providerMap"></association>
+	</resultMap>
+
+
+	<!-- 펀드 상품 기준가 VO -->
+	<resultMap id="basepriceMap" type="BasepriceVO">
+		<result property="goods_code" column="goods_code" />
+		<result property="base_date" column="base_date" />
+		<result property="status" column="status" />
+		<result property="trbase_price" column="trbase_price" />
+		<result property="trxbase_price" column="trxbase_price" />
+	</resultMap>
+	
+	
+	<!-- 외환상품 GoodsExListVO -->
+	<resultMap id="goodsExListMap" type="GoodsExListVO">
+		<result property="goods_code" column="goods_code" />
+		<result property="goods_gubun" column="goods_gubun" />
+		<result property="provider_code" column="provider_code" />
+		<result property="goods_name" column="goods_name" />
+		<result property="orign_code" column="orign_code" />
+		<result property="period_mm" column="period_mm" />
+		<result property="invest_gubun" column="invest_gubun" />
+		<result property="forignexg_kind" column="forignexg_kind" />
+		<result property="tran_unit" column="tran_unit" />
+		<result property="goods_status" column="goods_status" />
+		<association property="exchangerate" resultMap="exchangeRateMap"></association>
+		<association property="provider" resultMap="providerMap"></association>
+	</resultMap>
+	
+	
+
+	<!-- 환율 정보 VO -->
+	<resultMap id="exchangeRateMap" type="ExchangerateVO">
+		<result property="goods_code" column="goods_code" />
+		<result property="base_date" column="base_date" />
+		<result property="seq_no" column="seq_no" />
+		<result property="status" column="status" />
+		<result property="exchange_rate" column="exchange_rate" />
+	</resultMap>
+
+
+	<!-- 주가상품 GoodsStockListVO -->
+	<resultMap id="goodsStockListMap" type="GoodsStockListVO">
+		<result property="goods_code" column="goods_code" />
+		<result property="goods_gubun" column="goods_gubun" />
+		<result property="provider_code" column="provider_code" />
+		<result property="goods_name" column="goods_name" />
+		<result property="orign_code" column="orign_code" />
+		<result property="period_mm" column="period_mm" />
+		<result property="invest_gubun" column="invest_gubun" />
+		<result property="forignexg_kind" column="forignexg_kind" />
+		<result property="tran_unit" column="tran_unit" />
+		<result property="goods_status" column="goods_status" />
+		<association property="stockprice" resultMap="stockpriceMap"></association>
+		<association property="provider" resultMap="providerMap"></association>
+	</resultMap>
+
+	<!-- 주가 정보 VO -->
+	<resultMap id="stockpriceMap" type="StockpriceVO">
+		<result property="goods_code" column="goods_code" />
+		<result property="base_date" column="base_date" />
+		<result property="seq_no" column="seq_no" />
+		<result property="status" column="status" />
+		<result property="tran_datetime" column="tran_datetime" />
+		<result property="stock_price" column="stock_price" />
+	</resultMap>
+
+	<!-- 상품 제공사 정보 VO -->
+	<resultMap id="providerMap" type="ProviderVO">
+		<result property="provider_code" column="provider_code" />
+		<result property="provider_name" column="provider_name" />
+		<result property="status" column="status" />
+	</resultMap>
+
+	<!-- 예금 상품 / 금리 / 제공사 VO JOIN -->
+	<resultMap id="goodsInterestrateProviderMap"
+		type="GoodsInterestrateProviderVO">
+		<association property="goods" resultMap="goodsMap"></association>
+		<association property="interestRate"
+			resultMap="interestRateMap"></association>
+		<association property="provider" resultMap="providerMap"></association>
+	</resultMap>
+
+	<!-- 펀드 상품 / 기준가 / 제공사 VO JOIN -->
+	<resultMap id="goodsBasepriceProviderMap"
+		type="GoodsBasepriceProviderVO">
+		<association property="goods" resultMap="goodsMap"></association>
+		<association property="baseprice" resultMap="basepriceMap"></association>
+		<association property="provider" resultMap="providerMap"></association>
+	</resultMap>
+
+	<!-- 외환 상품 / 환율 / 제공사 VO JOIN -->
+	<resultMap id="GoodsExchangerateProviderMap"
+		type="GoodsExchangerateProviderVO">
+		<association property="goods" resultMap="goodsMap"></association>
+		<association property="exchangeRate"
+			resultMap="exchangeRateMap"></association>
+		<association property="provider" resultMap="providerMap"></association>
+	</resultMap>
+
+	<!-- 주식 상품 / 주가 / 제공사 VO JOIN -->
+	<resultMap id="GoodsStockpriceProviderMap"
+		type="GoodsStockpriceProviderVO">
+		<association property="goods" resultMap="goodsMap"></association>
+		<association property="stockprice"
+			resultMap="stockpriceMap"></association>
+		<association property="provider" resultMap="providerMap"></association>
+	</resultMap>
+
+	<!-- 모든 상품 VO JOIN -->
+	<resultMap id="goodsAllMap" type="GoodsAllVO">
+		<association property="goods" resultMap="goodsMap"></association>
+		<association property="baseprice" resultMap="basepriceMap"></association>
+		<association property="exchangeRate"
+			resultMap="exchangeRateMap"></association>
+		<association property="interestRate"
+			resultMap="interestRateMap"></association>
+		<association property="provider" resultMap="providerMap"></association>
+		<association property="stockprice"
+			resultMap="stockpriceMap"></association>
+	</resultMap>
+
+	<select id="read" resultMap="goodsMap">
+		<![CDATA[
+		    SELECT * FROM GOODS_MAS where
+	    	goods_code = #{goods_code}
+		]]>
+	</select>
+
+	<!-- 예금 상품 목록 조회 -->
+	<select id="getDepositList" resultMap="goodsInterestrateProviderMap">
+		SELECT * FROM goods_mas gm
+		JOIN interestrate_his ih
+		ON gm.goods_code = ih.goods_code
+		JOIN provider_mas pm
+		ON gm.provider_code = pm.provider_code
+		order by gm.goods_code
+	</select>
+
+	<!-- 예금 특정 상품 조회 -->
+	<select id="getDepositCode" resultMap="goodsDepositListMap">
+		SELECT * FROM goods_mas gm
+		JOIN interestrate_his ih
+		ON gm.goods_code = ih.goods_code
+		JOIN provider_mas pm
+		ON gm.provider_code = pm.provider_code
+		WHERE gm.goods_code = #{depositCode}
+	</select>
+
+	<!-- 펀드 상품 목록 조회 -->
+	<select id="getFundList" resultMap="goodsBasepriceProviderMap">
+		<![CDATA[
+			SELECT * FROM goods_mas gm
+			JOIN
+			baseprice_his bh
+			ON gm.goods_code = bh.goods_code
+			JOIN provider_mas pm 
+			ON gm.provider_code = pm.provider_code
+			where base_date=TO_CHAR(SYSDATE, 'YYYYMMDD')
+			order by gm.goods_code
+		]]>
+	</select>
+
+	<!-- 펀드 특정 상품 조회 -->
+	<select id="getFundCode" resultMap="goodsFundListMap">
+		<![CDATA[
+			SELECT * FROM goods_mas gm
+			JOIN
+			baseprice_his bh
+			ON gm.goods_code = bh.goods_code
+			JOIN provider_mas pm 
+			ON gm.provider_code = pm.provider_code
+	    	WHERE 
+	        base_date=TO_CHAR(SYSDATE, 'YYYYMMDD')
+	        and 
+	        gm.goods_code = #{fundCode}
+      	]]>
+	</select>
+
+
+	<!-- 외환 상품 목록 조회 -->
+	<select id="getExchangeList"
+		resultMap="GoodsExchangerateProviderMap">
+		<![CDATA[
+			SELECT * FROM goods_mas gm
+			JOIN exchangerate_his eh
+			ON gm.goods_code = eh.goods_code
+			JOIN provider_mas pm 
+			ON gm.provider_code = pm.provider_code
+			where base_date=TO_CHAR(SYSDATE, 'YYYYMMDD')
+			order by gm.goods_code
+		]]>
+	</select>
+	
+	
+	<!-- 외환 특정 상품 조회 -->
+	<select id="getExCode"
+		resultMap="goodsExListMap">
+		<![CDATA[
+			SELECT * FROM goods_mas gm
+			JOIN
+			exchangerate_his eh
+			ON gm.goods_code = eh.goods_code
+			JOIN provider_mas pm 
+			ON gm.provider_code = pm.provider_code
+			where base_date=TO_CHAR(SYSDATE, 'YYYYMMDD')
+			and 
+	        gm.goods_code = #{exCode}
+		]]>
+	</select>
+	
+	
+
+	<!-- 주식 상품 목록 조회 -->
+	<select id="getStockList" resultMap="GoodsStockpriceProviderMap">
+		<![CDATA[
+			SELECT * FROM goods_mas gm
+			JOIN stockprice_his sh
+			ON gm.goods_code = sh.goods_code
+			JOIN provider_mas pm 
+			ON gm.provider_code = pm.provider_code
+			where base_date=TO_CHAR(SYSDATE, 'YYYYMMDD')
+			order by gm.goods_code
+		]]>
+	</select>
+	
+	<!-- 주식 상품 상세 조회 -->
+	<select id="getStockCode" resultMap="goodsStockListMap">
+		<![CDATA[
+			SELECT * FROM goods_mas gm
+			JOIN stockprice_his sh
+			ON gm.goods_code = sh.goods_code
+			JOIN provider_mas pm 
+			ON gm.provider_code = pm.provider_code
+			where base_date=TO_CHAR(SYSDATE, 'YYYYMMDD')
+	        and gm.goods_code = #{stockCode}
+		]]>
+	</select>
+
+</mapper>
