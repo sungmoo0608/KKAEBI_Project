@@ -24,36 +24,37 @@ public class RestSavingProductController {
 
 	@Autowired
 	private SavingProductService savingProductService; // FinProductService 주입
-	
-	
-	@GetMapping("/optionlist") public List<SavingProductOptionVO> list(){
-		 
-		 log.info("optionlist()...");
-		  
-		return savingProductService.getSavingProductOptionList(); }
-	
+
+	@GetMapping("/optionlist")
+	public List<SavingProductOptionVO> list() {
+
+		log.info("optionlist()...");
+
+		return savingProductService.getSavingProductOptionList();
+	}
+
 	@GetMapping("/list")
 	public SavingProductPageVO list(Criteria criteria) {
-		
+
 		log.info("list() ..");
-	      
+
 		SavingProductPageVO vo = new SavingProductPageVO();
-	      
+
 		vo.setProduct(savingProductService.getListWithPaging(criteria));
-	         
+
 		int total = savingProductService.getTotal();
-		vo.setPage(new PageVO(criteria,total));
-	      
+		vo.setPage(new PageVO(criteria, total));
+
 		return vo;
-		
+
 	}
-	
-	//특정 번호를 받으면 해당 정보 서비스
-	@GetMapping("/{finprdtcd}")	// 경로 변수
-	public SavingProductVO content(SavingProductVO savingProductVO){
+
+	// 특정 번호를 받으면 해당 정보 서비스
+	@GetMapping("/{finprdtcd}") // 경로 변수
+	public SavingProductVO content(SavingProductVO savingProductVO) {
 		log.info("content()...");
-		
+
 		return savingProductService.get(savingProductVO.getFinprdtcd());
 	}
-	
+
 }

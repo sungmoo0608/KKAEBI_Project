@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ict.ex.notice.mapper.NoticeUsMapper">
+
+	<!-- 전체 공지사항 조회 -->
+	<select id="getAllUsNotice" resultType="edu.ict.ex.notice.vo.NoticeUsVO"> SELECT
+		seq_no, notice_title, regist_date FROM notice_his WHERE status != 9 AND
+		notice_target != 2 ORDER BY seq_no ASC <!-- 오름차순 1부터 출력 -->
+	</select>
+
+	<!-- 공지사항 상세 조회 -->
+	<select id="getNoticeUsDetail" resultType="edu.ict.ex.notice.vo.NoticeUsVO"> SELECT
+		seq_no, notice_title, notice_content, notice_target, notice_st_date,
+		notice_end_date, status, regist_id, regist_date, last_chg_id,
+		last_chg_date, expire_id, expire_date FROM notice_his WHERE seq_no =
+		#{seq_no} AND status != 9 AND notice_target != 2 <!-- notice_target이 2일
+		경우 제외 -->
+	</select>
+
+
+</mapper>
