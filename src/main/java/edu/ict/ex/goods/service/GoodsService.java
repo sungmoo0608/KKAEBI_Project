@@ -60,10 +60,10 @@ public class GoodsService {
 	}
 	
 	// 모든 상품 조회
-	public List<GoodsAllVO> getAllList(){
-		System.out.println("getAllList() ..");
+	public List<GoodsAllVO> getGoodsAll(){
+		System.out.println("getGoodsAll() ..");
 
-		return goodsMapper.getAllList();
+		return goodsMapper.getGoodsAll();
 	}
 	
 	// 상품 상세 보기
@@ -121,6 +121,19 @@ public class GoodsService {
 		return goodsMapper.getStockCode(stockCode);
 	}
 
+	
+	// 모든 상품 목록에서 상품 상세 보기
+	public GoodsStockListVO get5(int stockCode) {
+		
+		System.out.println("get()..");
+		
+		GoodsStockListVO goods = new GoodsStockListVO();
+		goods.setGoods_code(stockCode);
+		
+		return goodsMapper.getStockCode(stockCode);
+	}
+	
+	
 	//상품 추가
 	public int createGoods(GoodsVO goods) {
 

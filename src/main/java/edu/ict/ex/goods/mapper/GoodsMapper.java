@@ -33,8 +33,8 @@ public interface GoodsMapper {
 	// 주식 상품 조회
     List<GoodsStockpriceProviderVO> getStockList();  
     
-	// 주식 상품 조회
-    List<GoodsAllVO> getAllList();  
+	// 모든 상품 조회
+    List<GoodsAllVO> getGoodsAll();  
     
 	// 상품 상세 보기
     GoodsVO read(int goodscode);
@@ -50,6 +50,7 @@ public interface GoodsMapper {
     
     // 주식 상품 상세 보기
     GoodsStockListVO getStockCode(int stockCode);
+    
     
 	//상품 수정
     int modifyGoods(GoodsVO goodsVO);	

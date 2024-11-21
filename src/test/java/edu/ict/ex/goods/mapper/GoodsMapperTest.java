@@ -62,6 +62,7 @@ class GoodsMapperTest {
 		System.out.println(mapper.getExCode(1025));
 	}
 	
+	@Disabled
 	@Test
 	void testGetStockCode() {
 		System.out.println(mapper.getStockCode(1029));

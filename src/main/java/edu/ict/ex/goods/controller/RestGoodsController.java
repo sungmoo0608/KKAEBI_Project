@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,26 +50,6 @@ public class RestGoodsController {
 		log.info("content()...");
 		
 		return goodsService.get1(goodsDepositListVO.getGoods_code());
-	}
-	
-	// 상품 수정
-	@PutMapping("/")	// 경로 변수
-	public ResponseEntity<String> modify(@RequestBody GoodsVO goods){
-		
-		log.info("modify..");
-		log.info("goods" + goods);
-		
-		ResponseEntity<String> entity = null;
-		
-		try {
-			int rn = goodsService.modifyGoods(goods);
-			entity = new ResponseEntity<String>(String.valueOf(rn),HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
-			entity = new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
-		}
-		
-		return entity;
 	}
 	
 	// 펀드 상품 목록
@@ -132,7 +113,7 @@ public class RestGoodsController {
 
 		log.info("Stocklist()...");
 
-		return goodsService.getAllList();
+		return goodsService.getGoodsAll();
 	}
 	
 	//특정 번호를 받으면 해당 정보 서비스
@@ -143,6 +124,44 @@ public class RestGoodsController {
 		return goodsService.get(goodsVO.getGoods_code());
 	}
 	
-
+	// 상품 수정
+	@PutMapping("/")	// 경로 변수
+	public ResponseEntity<String> modify(@RequestBody GoodsVO goods){
+		
+		log.info("modify..");
+		log.info("goods" + goods);
+		
+		ResponseEntity<String> entity = null;
+		
+		try {
+			int rn = goodsService.modifyGoods(goods);
+			entity = new ResponseEntity<String>(String.valueOf(rn),HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}
+	
+	// 상품 추가
+	@PostMapping("/")	// 경로 변수
+	public ResponseEntity<String> write(@RequestBody GoodsVO goods){
+		
+		log.info("write..");
+		log.info("board" + goods);
+		
+		ResponseEntity<String> entity = null;
+		
+		try {
+			goodsService.createGoods(goods);
+			entity = new ResponseEntity<String>("SUCCESS",HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			entity = new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
+		}
+		
+		return entity;
+	}
 
 }

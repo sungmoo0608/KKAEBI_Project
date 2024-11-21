@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="edu.ict.ex.goods.mapper.GoodsMapper">
+
 	<select id="getGoodsList"
 		resultType="edu.ict.ex.goods.vo.GoodsVO">
 		SELECT * FROM GOODS_MAS
@@ -232,13 +232,10 @@
 	<resultMap id="goodsAllMap" type="GoodsAllVO">
 		<association property="goods" resultMap="goodsMap"></association>
 		<association property="baseprice" resultMap="basepriceMap"></association>
-		<association property="exchangeRate"
-			resultMap="exchangeRateMap"></association>
-		<association property="interestRate"
-			resultMap="interestRateMap"></association>
+		<association property="exchangerate" resultMap="exchangeRateMap"></association>
+		<association property="interestrate" resultMap="interestRateMap"></association>
 		<association property="provider" resultMap="providerMap"></association>
-		<association property="stockprice"
-			resultMap="stockpriceMap"></association>
+		<association property="stockprice" resultMap="stockpriceMap"></association>
 	</resultMap>
 
 	<select id="read" resultMap="goodsMap">
@@ -246,6 +243,48 @@
 		    SELECT * FROM GOODS_MAS where
 	    	goods_code = #{goods_code}
 		]]>
+	</select>
+	
+	<!-- 모든 상품 목록 조회  -->
+	<select id="getGoodsAll" resultMap="goodsAllMap">
+		<![CDATA[	
+			SELECT 
+			*
+			FROM 
+			    goods_mas g
+			LEFT JOIN 
+			    provider_mas p ON g.provider_code = p.provider_code
+			LEFT JOIN 
+			    interestrate_his i ON g.goods_code = i.goods_code AND g.period_mm = i.period_mm
+			LEFT JOIN 
+			    exchangerate_his e ON g.goods_code = e.goods_code AND e.base_date = TO_CHAR(SYSDATE, 'YYYYMMDD')
+			LEFT JOIN 
+			    baseprice_his b ON g.goods_code = b.goods_code AND b.base_date = TO_CHAR(SYSDATE, 'YYYYMMDD')
+			LEFT JOIN 
+			    stockprice_his s ON g.goods_code = s.goods_code AND s.base_date = TO_CHAR(SYSDATE, 'YYYYMMDD')
+			ORDER BY g.goods_code
+		]]>  
+	</select>
+	
+	<!-- 모든 목록에서 상품 조회  -->
+	<select id="modifyALLGoods" resultMap="goodsAllMap">
+		<![CDATA[	
+			SELECT 
+			*
+			FROM 
+			    goods_mas g
+			LEFT JOIN 
+			    provider_mas p ON g.provider_code = p.provider_code
+			LEFT JOIN 
+			    interestrate_his i ON g.goods_code = i.goods_code AND g.period_mm = i.period_mm
+			LEFT JOIN 
+			    exchangerate_his e ON g.goods_code = e.goods_code AND e.base_date = TO_CHAR(SYSDATE, 'YYYYMMDD')
+			LEFT JOIN 
+			    baseprice_his b ON g.goods_code = b.goods_code AND b.base_date = TO_CHAR(SYSDATE, 'YYYYMMDD')
+			LEFT JOIN 
+			    stockprice_his s ON g.goods_code = s.goods_code AND s.base_date = TO_CHAR(SYSDATE, 'YYYYMMDD')
+			WHERE gm.goods_code = #{allCode}
+		]]>  
 	</select>
 
 	<!-- 예금 상품 목록 조회 -->
@@ -330,8 +369,6 @@
 		]]>
 	</select>
 	
-	
-
 	<!-- 주식 상품 목록 조회 -->
 	<select id="getStockList" resultMap="GoodsStockpriceProviderMap">
 		<![CDATA[

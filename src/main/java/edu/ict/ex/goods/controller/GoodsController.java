@@ -59,11 +59,11 @@ public class GoodsController {
         return "goods/listStock";    
     }
     
-    //주식상품 목록
+    //모든상품 목록
     @GetMapping("/Alllist")
     public String Alllist(Model model) {
     	log.info("Alllist()..");
-        model.addAttribute("goodsList", goodsService.getAllList());
+        model.addAttribute("goodsList", goodsService.getGoodsAll());
         return "goods/listStock";    
     }
     
