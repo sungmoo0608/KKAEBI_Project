@@ -12,15 +12,15 @@ import lombok.ToString;
 //NOTICE_TITLE             VARCHAR2(500)  
 //NOTICE_CONTENT           VARCHAR2(3000) 
 //NOTICE_TARGET            NUMBER(2)      
-//NOTICE_ST_DATE           VARCHAR2(8)    
-//NOTICE_END_DATE          VARCHAR2(8)    
+//NOTICE_ST_DATE           VARCHAR2(10)    
+//NOTICE_END_DATE          VARCHAR2(10)    
 //STATUS                   NUMBER(2)      
 //REGIST_ID                VARCHAR2(50)   
-//REGIST_DATE              VARCHAR2(8)    
+//REGIST_DATE              VARCHAR2(10)    
 //LAST_CHG_ID              VARCHAR2(50)   
-//LAST_CHG_DATE            VARCHAR2(8)    
+//LAST_CHG_DATE            VARCHAR2(10)    
 //EXPIRE_ID                VARCHAR2(50)   
-//EXPIRE_DATE              VARCHAR2(8)    
+//EXPIRE_DATE              VARCHAR2(10)    
 
 @Getter
 @Setter

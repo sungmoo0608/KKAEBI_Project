@@ -68,7 +68,7 @@ public class RestNoticeController {
 	public ResponseEntity<String> write(@RequestBody NoticeVO notice){
 		
 		log.info("write..");
-		log.info("board" + notice);
+		log.info("notice" + notice);
 		
 		ResponseEntity<String> entity = null;
 		
