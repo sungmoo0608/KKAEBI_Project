@@ -161,7 +161,7 @@
 
         <!-- 목록으로 돌아가기 버튼 -->
         <div class="form-group text-center">
-            <a href="${pageContext.request.contextPath}/notice/list" class="btn btn-custom-secondary">목록</a>
+            <a href="${pageContext.request.contextPath}/noticetest/list" class="btn btn-custom-secondary">목록</a>
         </div>
 
     </div>

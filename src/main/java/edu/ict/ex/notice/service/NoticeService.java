@@ -37,8 +37,9 @@ public class NoticeService {
 	}
 
 	// 공지사항 상태를 9로 변경 (삭제 처리)
-	public void updateStatusToDeleted(int seq_no) {
-		noticeMapper.deleteNotice(seq_no);
+	public void updateStatus(int seq_no, int status) {
+	    System.out.println("Update status for seq_no: " + seq_no + " to status: " + status);
+	    noticeMapper.updateStatusTo(seq_no, status);
 	}
 
 	// 만료된 공지사항 상태 변경

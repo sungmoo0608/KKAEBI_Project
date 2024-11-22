@@ -6,7 +6,6 @@
     <select id="getAllNotice" resultType="edu.ict.ex.notice.vo.NoticeVO">
         SELECT *
         FROM notice_his 
-        WHERE status != 9 
         ORDER BY seq_no desc<!---오름차순 1부터 출력-->
     </select>
 
@@ -73,12 +72,9 @@
 	    )
 	</insert>
 
-
     <!-- 공지사항 비활성화 -->
-    <update id="deleteNotice" parameterType="int">
-        UPDATE notice_his
-        SET status = 9
-        WHERE seq_no = #{seq_no}
+    <update id="updateStatusTo">
+		UPDATE notice_his SET status = #{status} WHERE seq_no = #{seq_no}
     </update>
 
 </mapper>

@@ -103,7 +103,7 @@ th.notice_manage, td.notice_manage {
 
 		<!-- 공지사항 등록 버튼을 오른쪽으로 정렬 -->
 		<div class="text-right mb-3">
-			<a href="${pageContext.request.contextPath}/notice/create"
+			<a href="${pageContext.request.contextPath}/noticetest/create"
 				class="btn btn-primary btn-custom">등록</a>
 		</div>
 
@@ -135,17 +135,17 @@ th.notice_manage, td.notice_manage {
 						<td class="notice_title">${notice.notice_title}</td>
 						<td class="notice_regist_date">
 							<!-- 날짜 포맷 변경 --> <fmt:parseDate var="parsedDate"
-								value="${notice.regist_date}" pattern="yyyy-MM-dd HH:mm:ss" />
+								value="${notice.regist_date}" pattern="yy/MM/dd" />
 							<fmt:formatDate value="${parsedDate}" pattern="yy-MM-dd" />
 						</td>
 						<td class="status">${notice.status == 1 ? '활성화' : '비활성화'}</td>
 						<td class="notice_manage"><a
 							class="btn btn-warning btn-custom"
-							href="${pageContext.request.contextPath}/notice/detail?seq_no=${notice.seq_no}">상세</a>
+							href="${pageContext.request.contextPath}/noticetest/detail?seq_no=${notice.seq_no}">상세</a>
 							<a class="btn btn-success btn-custom"
-							href="${pageContext.request.contextPath}/notice/update?seq_no=${notice.seq_no}">수정</a>
+							href="${pageContext.request.contextPath}/noticetest/update?seq_no=${notice.seq_no}">수정</a>
 							<a class="btn btn-danger btn-custom"
-							href="${pageContext.request.contextPath}/notice/delete?seq_no=${notice.seq_no}">비활</a>
+							href="${pageContext.request.contextPath}/noticetest/delete?seq_no=${notice.seq_no}">비활</a>
 						</td>
 					</tr>
 				</c:forEach>

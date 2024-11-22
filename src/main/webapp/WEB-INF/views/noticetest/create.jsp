@@ -33,7 +33,7 @@
 <body>
     <div class="container mt-5">
         <h2>공지사항 등록</h2>
-        <form action="${pageContext.request.contextPath}/notice/create" method="post">
+        <form action="${pageContext.request.contextPath}/noticetest/create" method="post">
             <!-- 공지사항 제목 -->
             <div class="form-group">
                 <label for="notice_title">공지사항 제목</label>

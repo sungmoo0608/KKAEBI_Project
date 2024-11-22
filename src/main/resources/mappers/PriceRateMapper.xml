@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ict.ex.goods.mapper.PriceRateMapper">
+
+	<!-- 예금 상품 금리 VO -->
+	<resultMap id="interestRateMap" type="InterestrateVO">
+		<result property="goods_code" column="goods_code" />
+		<result property="period_mm" column="period_mm" />
+		<result property="status" column="status" />
+		<result property="interest_rate" column="interest_rate" />
+	</resultMap>
+
+	<!-- 펀드 상품 기준가 VO -->
+	<resultMap id="basepriceMap" type="BasepriceVO">
+		<result property="goods_code" column="goods_code" />
+		<result property="base_date" column="base_date" />
+		<result property="status" column="status" />
+		<result property="trbase_price" column="trbase_price" />
+		<result property="trxbase_price" column="trxbase_price" />
+	</resultMap>
+
+	<!-- 환율 정보 VO -->
+	<resultMap id="exchangeRateMap" type="ExchangerateVO">
+		<result property="goods_code" column="goods_code" />
+		<result property="base_date" column="base_date" />
+		<result property="seq_no" column="seq_no" />
+		<result property="status" column="status" />
+		<result property="exchange_rate" column="exchange_rate" />
+	</resultMap>
+
+	<!-- 주가 정보 VO -->
+	<resultMap id="stockpriceMap" type="StockpriceVO">
+		<result property="goods_code" column="goods_code" />
+		<result property="base_date" column="base_date" />
+		<result property="seq_no" column="seq_no" />
+		<result property="status" column="status" />
+		<result property="tran_datetime" column="tran_datetime" />
+		<result property="stock_price" column="stock_price" />
+	</resultMap>
+
+	<!-- 30일전 펀드 모든 상품 가격 리스트 -->
+	<select id="getBasepriceList" resultMap="basepriceMap">
+		<![CDATA[
+			SELECT *
+			FROM baseprice_his
+			WHERE base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
+		]]>
+	</select>
+	
+	<!-- 지정 30일전 펀드 상품 가격 -->
+	<select id="getCodeBPrice" resultMap="basepriceMap">
+		<![CDATA[
+			SELECT *
+			FROM baseprice_his
+			WHERE base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
+			and goods_code = #{goods_code}
+		]]>
+	</select>
+	
+	<!-- 30일전 외환 모든 상품 가격 리스트 -->
+	<select id="getExchangerateList" resultMap="exchangeRateMap">
+		<![CDATA[
+			SELECT *
+			FROM exchangerate_his
+			WHERE base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
+		]]>
+	</select>
+	
+	<!-- 지정 30일전 외환 상품 가격 -->
+	<select id="getExchangeRate" resultMap="exchangeRateMap">
+		<![CDATA[
+			SELECT *
+			FROM exchangerate_his
+			WHERE base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
+			and goods_code = #{goods_code}
+		]]>
+	</select>
+	
+	
+	<!-- 30일전 주식 모든 상품 가격 리스트 -->
+	<select id="getStockpriceList" resultMap="stockpriceMap">
+		<![CDATA[
+			SELECT *
+			FROM stockprice_his
+			WHERE base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
+		]]>
+	</select>
+	
+	<!-- 지정 30일전 외환 상품 가격 -->
+	<select id="getStockpirce" resultMap="stockpriceMap">
+		<![CDATA[
+			SELECT *
+			FROM stockprice_his
+			WHERE base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
+			and goods_code = #{goods_code}
+		]]>
+	</select>
+
+</mapper>

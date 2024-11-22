@@ -64,11 +64,11 @@ public class NoticeController {
     }
 
     // 게시물 삭제
-    @GetMapping("/delete")
-    public String deleteNotice(@RequestParam("seq_no") int seq_no) {
-        noticeService.updateStatusToDeleted(seq_no);
-        return "redirect:/noticetest/list"; // 공지사항 목록 페이지로 리다이렉트
-    }
+//    @GetMapping("/delete")
+//    public String deleteNotice(@RequestParam("seq_no") int seq_no) {
+//        noticeService.updateStatus(seq_no);
+//        return "redirect:/noticetest/list"; // 공지사항 목록 페이지로 리다이렉트
+//    }
     // 만료된 공지사항 상태 변경
     @PostMapping("/expire")
     public String expireNotices(@RequestParam("expire_id") String expireId) {
