@@ -19,7 +19,7 @@ import edu.ict.ex.goods.vo.GoodsVO;
 public interface GoodsMapper {
 
 	// 상품 목록 조회
-    List<GoodsVO> getGoodsList();  
+    List<Integer> getGoodsList();  
     
 	// 예금 상품 조회
     List<GoodsInterestrateProviderVO> getDepositList();  

@@ -46,4 +46,11 @@ public class NoticeService {
 	public void updateExpiredNoticesStatus(String expireId) {
 		noticeMapper.updateExpiredNoticesStatus(expireId);
 	}
+	
+	// 공지대상 변경
+    public boolean updateTargetTo(int seq_no, int notice_target) {
+        System.out.println("공지 대상 변경 중... 게시글 번호: " + seq_no + ", 대상: " + notice_target);
+        return noticeMapper.updateTargetTo(seq_no, notice_target); // 상태 변경
+    }
+	
 }

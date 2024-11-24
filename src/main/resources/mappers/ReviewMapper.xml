@@ -2,43 +2,97 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.ict.ex.notice.mapper.ReviewMapper">
 
-	<!-- 전체 공지사항 조회 -->
+	<!-- 페이징 카운트 -->
+    <select id="getTotalCount" resultType="int">
+       <![CDATA[
+           select count(*) from review_his
+        ]]>
+    </select>
+	
+	<!-- 페이징 설정 -->
+    <select id="getListWithPaging" resultType="edu.ict.ex.notice.vo.ReviewVO">
+       <![CDATA[
+	        SELECT * FROM (
+	              SELECT ROWNUM AS RNUM, A.* FROM (
+	                          SELECT *  FROM review_his order by seq_no
+	                ) A WHERE ROWNUM <= #{pageNum} * #{amount}
+	         ) WHERE RNUM > (#{pageNum}-1) * #{amount}
+        ]]>
+    </select>
+    
+    <select id="getReviewsByGoodsCode" resultType="edu.ict.ex.notice.vo.ReviewVO">
+	    SELECT * FROM review_his
+	    WHERE goods_code = #{goods_code}
+	    ORDER BY regist_date DESC
+	</select>
+    
+	<!-- 전체 리뷰 조회 -->
 	<select id="getAllReview" resultType="edu.ict.ex.notice.vo.ReviewVO">
-		SELECT seq_no, goods_code, notice_title, regist_date, status
+		SELECT *
 		FROM review_his
 		ORDER BY seq_no ASC
 	</select>
 
 	<select id="getReviewDetail" resultType="edu.ict.ex.notice.vo.ReviewVO">
 		SELECT
-		seq_no,
-		goods_code,
-		notice_title,
-		notice_content,
-		status,
-		regist_id,
-		regist_date,
-		last_chg_date,
-		expire_id,
-		expire_date,
-		bhit,
-		bgroup,
-		bstep,
-		bindent,
-		star_rating
-		FROM review_his
+			seq_no,
+			goods_code,
+			notice_title,
+			notice_content,
+			status,
+			regist_id,
+			regist_date,
+			last_chg_date,
+			expire_id,
+			expire_date,
+			bhit,
+			bgroup,
+			bstep,
+			bindent,
+			star_rating
+			FROM review_his
 		WHERE seq_no = #{seqNo}
 	</select>
 
-	<insert id="createReview" parameterType="edu.ict.ex.notice.vo.ReviewVO"> INSERT INTO
-		review_his ( seq_no, goods_code, notice_title, notice_content, status,
-		regist_id, regist_date, last_chg_date, expire_id, expire_date, bhit,
-		bgroup, bstep, bindent, star_rating ) VALUES ( REVIEW_SEQ.NEXTVAL, <!--
-		SEQUENCE에서 자동으로 값을 생성 -->
-		#{goods_code}, #{notice_title}, #{notice_content}, #{status},
-		#{regist_id}, #{regist_date}, <!-- yyyy-MM-dd 형식으로 날짜 변환 --> #{last_chg_date}, #{expire_id,
-		jdbcType=VARCHAR}, <!-- expire_id의 JDBC 타입을 VARCHAR로 설정 --> #{expire_date}, <!-- yyyy-MM-dd 형식으로 날짜 변환 --> #{bhit}, #{bgroup}, #{bstep},
-		#{bindent}, #{star_rating} ) </insert>
+	<insert id="createReview" parameterType="edu.ict.ex.notice.vo.ReviewVO"> 
+		INSERT INTO review_his 
+		( 
+			seq_no, 
+			goods_code, 
+			notice_title, 
+			notice_content, 
+			status,
+			regist_id, 
+			regist_date, 
+			last_chg_date, 
+			expire_id, 
+			expire_date, 
+			bhit, 
+			bgroup, 
+			bstep,
+			bindent, 
+			star_rating 
+		) 
+		VALUES 
+		( 
+			REVIEW_his_SEQ.NEXTVAL, <!-- SEQUENCE에서 자동으로 값을 생성 -->
+	        #{goods_code}, 
+	        #{notice_title}, 
+	        #{notice_content}, 
+	        1,
+	        #{regist_id},
+	        TO_char(SYSDATE, 'YYYY-MM-DD'),	<!-- regist_date를 작성 당일날 'YYYY-MM-DD' 형식으로 변환 -->
+	        TO_char(SYSDATE, 'YYYY-MM-DD'),	<!-- last_chg_date를 작성 당일로 함께 매핑 -->
+	        #{expire_id},	<!-- 초기 후기 등록해제자는 등록자로 매핑 -->
+	        '2099-12-31',   <!-- expire_date를 2099-12-31 기본값으로 등록 -->
+	        0, 
+	        REVIEW_his_SEQ.currval, <!-- SEQUENCE에서 자동으로 값을 생성 -->
+	        0, 
+	        0, 
+	        #{star_rating}
+        ) 
+        
+	</insert>
 
 	<update id="updateReview">
     UPDATE review_his
@@ -48,10 +102,10 @@
         notice_content = #{notice_content},
         status = #{status},
         regist_id = #{regist_id},
-        regist_date = TO_DATE(#{regist_date}, 'YYYY-MM-DD'),
-        last_chg_date = TO_DATE(#{last_chg_date}, 'YYYY-MM-DD'),
+        regist_date = TO_char(SYSDATE, 'YYYY-MM-DD'),
+        last_chg_date = TO_char(SYSDATE, 'YYYY-MM-DD'),
         expire_id = #{expire_id},
-        expire_date = TO_DATE(#{expire_date}, 'YYYY-MM-DD'),
+        expire_date = TO_char(SYSDATE, 'YYYY-MM-DD'),
         bhit = #{bhit},
         bgroup = #{bgroup},
         bstep = #{bstep},

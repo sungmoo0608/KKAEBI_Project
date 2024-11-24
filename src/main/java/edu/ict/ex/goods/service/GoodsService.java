@@ -24,7 +24,7 @@ public class GoodsService {
 	private GoodsMapper goodsMapper;
 
 	// 상품 전체 조회
-	public List<GoodsVO> getGoodsList() {
+	public List<Integer> getGoodsList() {
 		System.out.println("getGoodsList() ..");
 
 		return goodsMapper.getGoodsList();

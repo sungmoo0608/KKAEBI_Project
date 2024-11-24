@@ -67,7 +67,7 @@ public class RestNoticeController {
 	}
 	
 	//공지사항 등록
-	@PostMapping("/")	// 경로 변수
+	@PostMapping("/create")	// 경로 변수
 	public ResponseEntity<String> write(@RequestBody NoticeVO notice){
 		
 		log.info("write..");
@@ -86,6 +86,7 @@ public class RestNoticeController {
 		return entity;
 	}
 	
+	// 공지사항 진열 미진열 변경
 	@PutMapping("/{seq_no}/status")  // seq_no와 status를 경로 변수와 요청 본문으로 받음
 	public ResponseEntity<Map<String, Object>> changeStatus(
 	    @PathVariable int seq_no, @RequestBody Map<String, Integer> statusMap) {
@@ -108,4 +109,19 @@ public class RestNoticeController {
 	    }
 	}
     
+	//공지사항 대상 선택
+	@PutMapping("/updateTarget/{seq_no}")
+	public ResponseEntity<?> updateTargetTo(@PathVariable int seq_no, @RequestBody Map<String, Integer> request) {
+		int notice_target = request.get("target"); // 상태 값을 받아옴
+		boolean success = noticeService.updateTargetTo(seq_no, notice_target); // 공지 대상을 업데이트
+
+		if (success) {
+			return ResponseEntity.ok().build();
+		} else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("상태 업데이트 실패");
+		}
+	}
+	
+	
+	
 }

@@ -23,8 +23,7 @@ import lombok.ToString;
 //BGROUP                  NUMBER(10)     
 //BSTEP                   NUMBER(10)     
 //BINDENT                 NUMBER(10)     
-//STAR_RATING             NUMBER(2)      
-//GOODS_GUBUN             NUMBER(2)      
+//STAR_RATING             NUMBER(2)            
 
 @Getter
 @Setter
@@ -48,6 +47,5 @@ public class ReviewVO {
 	private int bstep;
 	private int bindent;
 	private int star_rating;
-	private int goods_gubun;
 
 }

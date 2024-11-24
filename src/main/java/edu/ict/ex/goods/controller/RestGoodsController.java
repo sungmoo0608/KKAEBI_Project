@@ -105,7 +105,7 @@ public class RestGoodsController {
 		return goodsService.get4(goodsStockListVO.getGoods_code());
 	}
 
-	// 모든 상품 목록
+	// 예금/외환/펀드/주식 정보 상품 목록
 	@GetMapping("/Alllist")
 	public List<GoodsAllVO> allList() {
 
@@ -113,6 +113,16 @@ public class RestGoodsController {
 
 		return goodsService.getGoodsAll();
 	}
+	
+	// 기본 Goods 상품 목록
+	@GetMapping("/goodscodelist")
+	public List<Integer> getGoodsList() {
+
+		log.info("Stocklist()...");
+
+		return goodsService.getGoodsList();
+	}
+
 
 	// 특정 번호를 받으면 해당 정보 서비스
 	@GetMapping("/{goods_code}") // 경로 변수

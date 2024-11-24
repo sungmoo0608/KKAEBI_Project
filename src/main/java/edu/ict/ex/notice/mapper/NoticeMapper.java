@@ -21,5 +21,7 @@ public interface NoticeMapper {
     
 	void updateExpiredNoticesStatus(String expire_Id);
 
+	// 공지 대상 변경
+    boolean updateTargetTo(int seq_no, int notice_target);
     
 }
