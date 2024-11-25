@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.ict.ex.performance.mapper.PerformanceMapper">
+
+	<resultMap id="PerformanceAllResultMap" 	type="edu.ict.ex.performance.vo.PerformanceAllVO">
+		<id property="user_id" 				column="user_id" />
+		<result property="name" 			column="name" />
+		<result property="birthday" 		column="birthday" />
+		<result property="create_date" 		column="create_date" />
+		<result property="grade" 			column="grade" />
+		<result property="trkwa_amt" 		column="trkwa_amt" />
+		<result property="trforign_amt" 	column="trforign_amt" />
+		<result property="val_amt" 			column="val_amt" />
+		<result property="sonik_amt" 		column="sonik_amt" />
+		<result property="suik_rate" 		column="suik_rate" />
+		<result property="out_grade" 		column="out_grade" />
+	</resultMap>
+
+
+	<select id="searchPerformanceAllList" resultMap="PerformanceAllResultMap">
+		<![CDATA[
+			select user_id,name,birthday,create_date,grade,to_char(trkwa_amt,'FM999,999,999,999') trkwa_amt,
+			   to_char(trforign_amt,'FM999,999,999,999') trforign_amt,to_char(val_amt,'FM999,999,999,999') val_amt,
+			   to_char(sonik_amt,'FM999,999,999,999') sonik_amt,to_char(suik_rate,'FM999,990.00') suik_rate,out_grade
+			from
+			(
+				select dd.user_id,dd.name,dd.birthday,dd.create_date,
+    				case 
+        				when sum(dd.trkwa_amt) >= 10000000 then 'S등급'
+        				when sum(dd.trkwa_amt) >= 5000000 then 'A등급'
+        				when sum(dd.trkwa_amt) >= 3000000 then 'B등급'
+        				when sum(dd.trkwa_amt) >= 1000000 then 'C등급'
+        				else '일반'
+        				end as grade,
+ 					sum(dd.trkwa_amt) trkwa_amt,sum(dd.trforign_amt) trforign_amt,
+    				sum(dd.val_amt) val_amt, sum(dd.sonik_amt) sonik_amt,
+    				(trunc(sum(dd.sonik_amt) / sum(dd.trkwa_amt) * 10000) / 100) suik_rate,
+  					    case 
+        					when sum(dd.trkwa_amt) >= 10000000 then 1
+        					when sum(dd.trkwa_amt) >= 5000000 then 2
+        					when sum(dd.trkwa_amt) >= 3000000 then 3
+        					when sum(dd.trkwa_amt) >= 1000000 then 4
+        					else 5
+        					end as out_grade
+				from
+				(
+					select cc.user_id,cc.name,cc.birthday,cc.create_date,cc.goods_gubun,
+    					case 
+        					when cc.goods_gubun = 1 then '예금'
+        					when cc.goods_gubun = 2 then '펀드'
+        					when cc.goods_gubun = 3 then '외화'
+        					when cc.goods_gubun = 4 then '주식'
+        					else ''
+        					end as goods_gubun_nm,
+  						cc.trkwa_amt,cc.trforign_amt,cc.val_amt, cc.sonik_amt ,
+  						(trunc(cc.sonik_amt / cc.trkwa_amt * 10000) / 100) suik_rate
+					from
+					( 
+						select bb.user_id,bb.name,bb.goods_gubun,bb.birthday,bb.create_date,
+  							sum(bb.trkwa_amt) trkwa_amt,sum(bb.trforign_amt) trforign_amt,
+  							sum(bb.trkwa_amt + bb.sonik_amt) val_amt, sum(bb.sonik_amt) sonik_amt
+						from
+						( 
+							select aa.user_id,aa.name,aa.account_no,aa.birthday,aa.create_date, 
+								aa.goods_code,aa.goods_gubun, aa.goods_name,aa.trkwa_amt,aa.trforign_amt,aa.period_mm,
+    							aa.trbase_num,aa.ilsu,aa.tr_number,aa.curprice,aa.tr_date,aa.mangi_date,aa.tran_unit,
+								case 
+    								when aa.goods_gubun = 1 then 
+        								(case 
+            								when (aa.mangi_date > aa.today) then (trunc(aa.trkwa_amt * aa.trbase_num / 100 / 365 * aa.ilsu))
+            								else trunc(aa.trkwa_amt * aa.trbase_num / 100 / 365 * (SELECT TRUNC(to_date(aa.mangi_date,'yyyy/mm/dd') - TO_DATE(aa.tr_date,'yyyy/mm/dd')) FROM dual)) 
+        								end )
+    								when aa.goods_gubun = 2 then 
+        								trunc(aa.tr_number * (aa.curprice - aa.trbase_num) / aa.tran_unit )
+    								when aa.goods_gubun = 3 then 
+        								trunc(aa.trforign_amt * (aa.curprice - aa.trbase_num) / aa.tran_unit )
+    								when aa.goods_gubun = 4 then 
+        								trunc(aa.tr_number * (aa.curprice - aa.trbase_num) / aa.tran_unit )
+    								else 0
+    							end as sonik_amt
+							from 
+							( 
+								select a.user_id,a.name,  a.birthday,to_char(a.create_date,'yyyy/mm/dd') create_date,
+										b.account_no,c.goods_code,c.trkwa_amt,c.trforign_amt,
+ 										c.tr_number,c.trbase_num,d.goods_gubun,d.goods_name,d.provider_code,d.tran_unit,
+ 										d.period_mm,d.invest_gubun,to_char(c.tr_datetime,'yyyy/mm/dd') tr_date,to_char(sysdate,'yyyy/mm/dd') today,
+ 										(SELECT trunc(sysdate - c.tr_datetime) AS days_difference FROM dual)  ilsu,
+ 										case
+    										when d.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(c.tr_datetime, d.period_mm) FROM dual),'yyyy/mm/dd')
+    										else to_char(c.tr_datetime,'yyyy/mm/dd') 
+ 										end as mangi_date,   
+ 										case 
+   											when d.goods_gubun = 1 then (select interest_rate  from interestrate_his where goods_code = c.goods_code and period_mm = d.period_mm and status	 = 1)
+    										when d.goods_gubun = 2 then (select trbase_price  from baseprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd')  and status	 = 1)
+    										when d.goods_gubun = 3 then (select exchange_rate  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       													and seq_no = (select max(seq_no)  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+    										when d.goods_gubun = 4 then (select stock_price  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       													and seq_no = (select max(seq_no)  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+ 											else c.trbase_num
+ 										end as curprice
+									from customer_mas a,account_mas b,transaction_his c,goods_mas d
+									where b.ref_status = 1
+										and a.user_id = b.user_id
+										and b.account_no = c.account_no
+										and c.tr_status = 1
+										and c.trkwa_amt > 0
+										and c.tr_kind = 3
+										and c.goods_code = d.goods_code
+								) aa
+							) bb
+							group by bb.user_id,bb.name,bb.birthday,bb.create_date,bb.goods_gubun
+						) cc
+					) dd
+					group by dd.user_id,dd.name,dd.birthday,dd.create_date
+				)
+				where out_grade >= #{st_grade} and out_grade <= #{end_grade}
+				order by out_grade,user_id
+		]]>
+	</select>
+
+	<resultMap id="PerformanceCustomerSummaryResultMap" 	type="edu.ict.ex.performance.vo.PerformanceCustomerSummaryVO">
+		<id property="user_id" 				column="user_id" />
+		<result property="name" 			column="name" />
+		<result property="goods_gubun" 		column="goods_gubun" />
+		<result property="goods_gubun_nm" 	column="goods_gubun_nm" />
+		<result property="cnt" 				column="cnt" />
+		<result property="trkwa_amt" 		column="trkwa_amt" />
+		<result property="val_amt" 			column="val_amt" />
+		<result property="sonik_amt" 		column="sonik_amt" />
+		<result property="suik_rate" 		column="suik_rate" />
+	</resultMap>
+
+	<select id="searchPerformanceCustomerSummaryList" resultMap="PerformanceCustomerSummaryResultMap">
+		<![CDATA[
+			select cc.user_id,cc.name,cc.goods_gubun,
+				case 
+        			when cc.goods_gubun = 1 then '예금'
+        			when cc.goods_gubun = 2 then '펀드'
+        			when cc.goods_gubun = 3 then '외화'
+        			when cc.goods_gubun = 4 then '주식'
+        			else ' '
+        			end as goods_gubun_nm,
+                cc.cnt, to_char(cc.trkwa_amt,'FM999,999,999,999') trkwa_amt,
+                to_char(cc.val_amt,'FM999,999,999,999') val_amt,
+                to_char(cc.sonik_amt,'FM999,999,999,999') sonik_amt,
+  				to_char((trunc(cc.sonik_amt / cc.trkwa_amt * 10000) / 100),'FM999,999,999,990.00') suik_rate
+			from
+			( 
+				select bb.user_id,bb.name,bb.goods_gubun,bb.birthday,bb.create_date,
+                   	count(bb.trkwa_amt) cnt,
+  					sum(bb.trkwa_amt) trkwa_amt,sum(bb.trforign_amt) trforign_amt,
+  					sum(bb.trkwa_amt + bb.sonik_amt) val_amt, sum(bb.sonik_amt) sonik_amt
+				from
+				( 
+					select aa.user_id,aa.name,aa.account_no,aa.birthday,aa.create_date, 
+						aa.goods_code,aa.goods_gubun, aa.goods_name,aa.trkwa_amt,aa.trforign_amt,aa.period_mm,
+    					aa.trbase_num,aa.ilsu,aa.tr_number,aa.curprice,aa.tr_date,aa.mangi_date,aa.tran_unit,
+						case 
+    						when aa.goods_gubun = 1 then 
+        						(case 
+            						when (aa.mangi_date > aa.today) then (trunc(aa.trkwa_amt * aa.trbase_num / 100 / 365 * aa.ilsu))
+            						else trunc(aa.trkwa_amt * aa.trbase_num / 100 / 365 * (SELECT TRUNC(to_date(aa.mangi_date,'yyyy/mm/dd') - TO_DATE(aa.tr_date,'yyyy/mm/dd')) FROM dual)) 
+        							end
+        						)
+    						when aa.goods_gubun = 2 then 
+        						trunc(aa.tr_number * (aa.curprice - aa.trbase_num) / aa.tran_unit )
+    						when aa.goods_gubun = 3 then 
+        						trunc(aa.trforign_amt * (aa.curprice - aa.trbase_num) / aa.tran_unit )
+    						when aa.goods_gubun = 4 then 
+        						trunc(aa.tr_number * (aa.curprice - aa.trbase_num) / aa.tran_unit )
+    						else 0
+    						end as sonik_amt
+					from 
+					( 
+						select a.user_id,a.name,  a.birthday,to_char(a.create_date,'yyyy/mm/dd') create_date,
+							b.account_no,c.goods_code,c.trkwa_amt,c.trforign_amt,
+ 							c.tr_number,c.trbase_num,d.goods_gubun,d.goods_name,d.provider_code,d.tran_unit,
+ 							d.period_mm,d.invest_gubun,to_char(c.tr_datetime,'yyyy/mm/dd') tr_date,to_char(sysdate,'yyyy/mm/dd') today,
+ 							(SELECT trunc(sysdate - c.tr_datetime) AS days_difference FROM dual)  ilsu,
+ 								case
+    								when d.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(c.tr_datetime, d.period_mm) FROM dual),'yyyy/mm/dd')
+    									else to_char(c.tr_datetime,'yyyy/mm/dd') 
+ 										end as mangi_date,   
+ 								case 
+   									when d.goods_gubun = 1 then (select interest_rate  from interestrate_his where goods_code = c.goods_code and period_mm = d.period_mm and status	 = 1)
+    								when d.goods_gubun = 2 then (select trbase_price  from baseprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd')  and status	 = 1)
+    								when d.goods_gubun = 3 then (select exchange_rate  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       										and seq_no = (select max(seq_no)  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+    								when d.goods_gubun = 4 then (select stock_price  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       										and seq_no = (select max(seq_no)  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+ 									else c.trbase_num
+ 									end as curprice
+							from customer_mas a,account_mas b,transaction_his c,goods_mas d
+							where b.ref_status = 1
+								and a.user_id = b.user_id
+								and b.account_no = c.account_no
+								and c.tr_status = 1
+								and c.trkwa_amt > 0
+								and c.tr_kind = 3
+								and c.goods_code = d.goods_code
+							) aa
+						) bb
+						group by bb.user_id,bb.name,bb.birthday,bb.create_date,bb.goods_gubun
+					) cc
+                    where cc.user_id = #{user_id}
+                    order by goods_gubun
+
+		]]>
+	</select>
+
+	<resultMap id="PerformanceCustomerDetailResultMap" 		type="edu.ict.ex.performance.vo.PerformanceCustomerDetailVO">
+		<id property="user_id" 				column="user_id" />
+		<result property="name" 			column="name" />
+		<result property="goods_gubun" 		column="goods_gubun" />
+		<result property="goods_gubun_nm" 	column="goods_gubun_nm" />
+		<result property="goods_code" 		column="goods_code" />
+		<result property="goods_name" 		column="goods_name" />
+		<result property="tr_date" 			column="tr_date" />
+		<result property="period_mm" 		column="period_mm" />
+		<result property="iyul" 			column="iyul" />
+		<result property="mangi_date" 		column="mangi_date" />
+		<result property="trkwa_amt" 		column="trkwa_amt" />
+		<result property="trforign_amt" 	column="trforign_amt" />
+		<result property="tr_number" 		column="tr_number" />
+		<result property="goods_number" 	column="goods_number" />
+		<result property="sonik_amt" 		column="sonik_amt" />
+		<result property="val_amt" 			column="val_amt" />
+		<result property="suik_rate" 		column="suik_rate" />
+	</resultMap>
+
+
+	<select id="searchPerformanceCustomerDetailList" resultMap="PerformanceCustomerDetailResultMap">
+		<![CDATA[
+	   		select bb.user_id,bb.name,bb.goods_gubun,
+             	case 
+            		when bb.goods_gubun = 1 then '예금'
+            		when bb.goods_gubun = 2 then '펀드'
+            		when bb.goods_gubun = 3 then '외화'
+                	when bb.goods_gubun = 4 then '주식'
+                    else ' '
+                    end as goods_gubun_nm,
+              	bb.goods_code,bb.goods_name,bb.tr_date,bb.period_mm,bb.iyul,bb.mangi_date,
+                to_char(bb.trkwa_amt,'FM999,999,999,999') trkwa_amt,to_char(bb.trforign_amt,'FM999,999,999,999') trforign_amt ,
+                to_char(bb.tr_number,'FM999,999,999,999') tr_number,to_char(bb.goods_number,'FM999,999,999,999') goods_number,
+                to_char(bb.sonik_amt,'FM999,999,999,999') sonik_amt ,to_char((bb.trkwa_amt + bb.sonik_amt),'FM999,999,999,999') val_amt,
+                to_char((trunc(bb.sonik_amt / bb.trkwa_amt * 10000) / 100),'FM999,999,999,990.00') suik_rate
+      		from
+            (
+				select aa.user_id,aa.name,aa.goods_code,aa.goods_gubun, 
+                  	aa.goods_name,aa.trkwa_amt,aa.trforign_amt,aa.period_mm,
+    				case when aa.goods_gubun = 1 then aa.trbase_num 
+    					else 0 end as iyul,
+                    aa.ilsu,aa.tr_number,aa.curprice,aa.tr_date,aa.mangi_date,aa.tran_unit,
+                    case 
+                      	when aa.goods_gubun = 1 then aa.trkwa_amt
+                      	when aa.goods_gubun = 2 then aa.tr_number
+                        when aa.goods_gubun = 3 then aa.trforign_amt
+                        when aa.goods_gubun = 4 then aa.tr_number
+                        else 0
+                        end as goods_number,
+					case 
+    					when aa.goods_gubun = 1 then 
+        					(case 
+            					when (aa.mangi_date > aa.today) then (trunc(aa.trkwa_amt * aa.trbase_num / 100 / 365 * aa.ilsu))
+            					else trunc(aa.trkwa_amt * aa.trbase_num / 100 / 365 * (SELECT TRUNC(to_date(aa.mangi_date,'yyyy/mm/dd') - TO_DATE(aa.tr_date,'yyyy/mm/dd')) FROM dual)) 
+        						end 
+        					)
+    					when aa.goods_gubun = 2 then 
+        					trunc(aa.tr_number * (aa.curprice - aa.trbase_num) / aa.tran_unit )
+    					when aa.goods_gubun = 3 then 
+        					trunc(aa.trforign_amt * (aa.curprice - aa.trbase_num) / aa.tran_unit )
+    					when aa.goods_gubun = 4 then 
+        					trunc(aa.tr_number * (aa.curprice - aa.trbase_num) / aa.tran_unit )
+    					else 0
+    					end as sonik_amt
+				from 
+				( 
+					select a.user_id,a.name,  a.birthday,to_char(a.create_date,'yyyy/mm/dd') create_date,
+						b.account_no,c.goods_code,c.trkwa_amt,c.trforign_amt,
+ 						c.tr_number,c.trbase_num,d.goods_gubun,d.goods_name,d.provider_code,d.tran_unit,
+ 						d.period_mm,d.invest_gubun,to_char(c.tr_datetime,'yyyy/mm/dd') tr_date,to_char(sysdate,'yyyy/mm/dd') today,
+ 						(SELECT trunc(sysdate - c.tr_datetime) AS days_difference FROM dual)  ilsu,
+ 								case
+    								when d.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(c.tr_datetime, d.period_mm) FROM dual),'yyyy/mm/dd')
+    									else ' ' 
+ 										end as mangi_date,   
+ 								case 
+   									when d.goods_gubun = 1 then (select interest_rate  from interestrate_his where goods_code = c.goods_code and period_mm = d.period_mm and status	 = 1)
+    								when d.goods_gubun = 2 then (select trbase_price  from baseprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd')  and status	 = 1)
+    								when d.goods_gubun = 3 then (select exchange_rate  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       									and seq_no = (select max(seq_no)  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+    								when d.goods_gubun = 4 then (select stock_price  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       									and seq_no = (select max(seq_no)  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+ 											else c.trbase_num
+ 										end as curprice
+						from 
+							customer_mas a,account_mas b,transaction_his c,goods_mas d
+						where b.ref_status = 1
+							and a.user_id = b.user_id
+							and b.account_no = c.account_no
+							and c.tr_status = 1
+							and c.trkwa_amt > 0
+							and c.tr_kind = 3
+							and c.goods_code = d.goods_code
+						) aa
+                	)bb 
+                    where bb.user_id = #{user_id} 
+                    and bb.goods_gubun >= #{st_goods_gubun} and bb.goods_gubun <= #{end_goods_gubun}
+                    order by bb.goods_gubun ,bb.tr_date
+
+		]]>
+	</select>
+
+
+
+</mapper>

@@ -129,11 +129,26 @@ tr, td {
     }
 </script>
 
+<script type="text/javascript">
+    function openGoodsDetail(user_id,goods_code) {
+        // 새로운 창을 열어서 상품상세정보를 조회
+        var url = "${pageContext.request.contextPath}/basketlist/basketlistdetail?user_id=" + user_id + "&goods_gubun=" + goods_code;
+        window.open(url, '_blank', 'width=1200,height=720');
+    }
+</script>
 
+
+<script type="text/javascript">
+    function openGoodsInvestInit(user_id,goods_gubun,goods_code) {
+        // 새로운 창을 열어서 상세 페이지를 표시
+        var url = "${pageContext.request.contextPath}/transaction/invest_init?user_id=" + user_id + "&goods_gubun=" + goods_gubun + "&goods_code=" + goods_code ;
+        window.open(url, '_blank', 'width=1200,height=720');
+    }
+</script>
 
 </head>
 
-
+ 
 
 <body>
 
@@ -142,7 +157,7 @@ tr, td {
 	<section>
 		<table border="1">
 			<thead>
-				<tr align="center">
+				<tr align="center">a
 
 					<td>상품유형</td>
 					<td>등록건수</td>
@@ -213,7 +228,7 @@ tr, td {
 							삭제하기</a>
 						</button></td>
 					<td align="center"><button
-							onclick="openGoodsDetail('${basketlist_detail.user_id}','${basketlist_detail.goods_code}')">
+							onclick="openGoodsInvestInit('${basketlist_detail.user_id}','${basketlist_detail.goods_gubun}','${basketlist_detail.goods_code}')">
 							투자하기</a>
 						</button></td>
 				</tr>
