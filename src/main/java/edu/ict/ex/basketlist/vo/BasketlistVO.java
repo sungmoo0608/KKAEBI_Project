@@ -1,7 +1,5 @@
 package edu.ict.ex.basketlist.vo;
 
-import java.sql.Timestamp;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
