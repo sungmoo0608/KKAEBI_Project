@@ -19,7 +19,7 @@ import edu.ict.ex.goods.vo.GoodsVO;
 public interface GoodsMapper {
 
 	// 상품 목록 조회
-    List<GoodsVO> getGoodsList();  
+    List<Integer> getGoodsList();  
     
 	// 예금 상품 조회
     List<GoodsInterestrateProviderVO> getDepositList();  
@@ -50,8 +50,7 @@ public interface GoodsMapper {
     
     // 주식 상품 상세 보기
     GoodsStockListVO getStockCode(int stockCode);
-    
-    
+       
 	//상품 수정
     int modifyGoods(GoodsVO goodsVO);	
     
@@ -62,5 +61,5 @@ public interface GoodsMapper {
     int delete(int goodscode);
     
     // 상품 진열 미진열 변경
-    int display(GoodsVO goodsVO);
+    boolean updateStatusTo(int goods_code, int status);
 }

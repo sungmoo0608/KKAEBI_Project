@@ -6,7 +6,6 @@
     <select id="getAllNotice" resultType="edu.ict.ex.notice.vo.NoticeVO">
         SELECT *
         FROM notice_his 
-        WHERE status != 9 
         ORDER BY seq_no desc<!---오름차순 1부터 출력-->
     </select>
 
@@ -17,7 +16,6 @@
                last_chg_id, last_chg_date, expire_id, expire_date
         FROM notice_his
         WHERE seq_no = #{seq_no}
-          AND status != 9
     </select>
     
     <!-- 공지사항 수정 -->
@@ -30,11 +28,10 @@
             notice_end_date = #{notice_end_date},
             status = #{status},
             regist_id = #{regist_id},
-            regist_date = TO_DATE(SYSDATE, 'YYYY-MM-DD'), <!-- SYSDATE를 yyyy-MM-dd 형식으로 DATE 타입으로 변환 -->
             last_chg_id = #{last_chg_id},
-            last_chg_date = TO_DATE(SYSDATE, 'YYYY-MM-DD'), <!-- SYSDATE를 yyyy-MM-dd 형식으로 DATE 타입으로 변환 -->
+            last_chg_date = TO_char(SYSDATE, 'YYYY-MM-DD'), <!-- SYSDATE를 yyyy-MM-dd 형식으로 DATE 타입으로 변환 -->
             expire_id = #{expire_id},
-            expire_date = TO_DATE(SYSDATE, 'YYYY-MM-DD') <!-- SYSDATE를 yyyy-MM-dd 형식으로 DATE 타입으로 변환 -->
+            expire_date = TO_char(SYSDATE, 'YYYY-MM-DD') <!-- SYSDATE를 yyyy-MM-dd 형식으로 DATE 타입으로 변환 -->
         WHERE seq_no = #{seq_no}
     </update>
 
@@ -65,20 +62,22 @@
 	        #{notice_end_date},
 	        #{status},
 	        #{regist_id},
-	        TO_DATE(#{regist_date}, 'YYYY-MM-DD'), <!-- yyyy-MM-dd 형식으로 날짜 변환 -->
+	        #{regist_date}, <!-- yyyy-MM-dd 형식으로 날짜 변환 -->
 	        #{last_chg_id},
-	        TO_DATE(#{last_chg_date}, 'YYYY-MM-DD'), <!-- yyyy-MM-dd 형식으로 날짜 변환 -->
+	        #{last_chg_date}, <!-- yyyy-MM-dd 형식으로 날짜 변환 -->
 	        #{expire_id},
-	        TO_DATE(#{expire_date}, 'YYYY-MM-DD') <!-- yyyy-MM-dd 형식으로 날짜 변환 -->
+	        #{expire_date} <!-- yyyy-MM-dd 형식으로 날짜 변환 -->
 	    )
 	</insert>
 
-
     <!-- 공지사항 비활성화 -->
-    <update id="deleteNotice" parameterType="int">
-        UPDATE notice_his
-        SET status = 9
-        WHERE seq_no = #{seq_no}
+    <update id="updateStatusTo">
+		UPDATE notice_his SET status = #{status} WHERE seq_no = #{seq_no}
+    </update>
+    
+    <!-- 공지사항 대상 변경 -->
+    <update id="updateTargetTo">
+		UPDATE notice_his SET notice_target = #{notice_target} WHERE seq_no = #{seq_no}
     </update>
 
 </mapper>

@@ -31,7 +31,7 @@
 <body>
 	<div class="container mt-5">
 		<h2>공지사항 수정</h2>
-		<form action="${pageContext.request.contextPath}/notice/update"
+		<form action="${pageContext.request.contextPath}/noticetest/update"
 			method="post">
 			<!-- 일련번호 (고정, 수정 불가) -->
 			<div class="form-group">
@@ -176,7 +176,7 @@
 				<button type="submit" class="btn btn-success"
 					onclick="confirmUpdate(event)">수정</button>
 				<a class="btn btn-secondary"
-					href="${pageContext.request.contextPath}/notice/list">목록</a>
+					href="${pageContext.request.contextPath}/noticetest/list">목록</a>
 			</div>
 		</form>
 	</div>

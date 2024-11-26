@@ -17,9 +17,11 @@ public interface NoticeMapper {
     
     void createNotice(NoticeVO notice); // 생성
     
-    void deleteNotice(int seq_no); // 삭제
+    void updateStatusTo(int seq_no, int status);
     
 	void updateExpiredNoticesStatus(String expire_Id);
 
+	// 공지 대상 변경
+    boolean updateTargetTo(int seq_no, int notice_target);
     
 }

@@ -3,18 +3,15 @@
 <mapper namespace="edu.ict.ex.goods.mapper.GoodsMapper">
 
 	<select id="getGoodsList"
-		resultType="edu.ict.ex.goods.vo.GoodsVO">
-		SELECT * FROM GOODS_MAS
+		resultType="java.lang.Integer">
+		SELECT goods_code FROM GOODS_MAS
 	</select>
 
 	<!-- 상품 진열 상태 바꾸기 -->
-	<update id="display">
+	<update id="updateStatusTo">
 		<![CDATA[
-			UPDATE goods_mas
-			SET goods_status = CASE
-            WHEN goods_status = 1 THEN 9
-            WHEN goods_status = 9 THEN 1
-            END
+			UPDATE goods_mas 
+			SET goods_status = #{status} 
 			WHERE goods_code = #{goods_code}
 		]]>
 	</update>

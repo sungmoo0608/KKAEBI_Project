@@ -142,14 +142,14 @@ public class GoodsController {
 	
 	//상품 판매진행 미진행 구현
 	//http://localhost:8282/goods/display
-	@PostMapping("/display")
-	public String display(GoodsVO goodsVO) {
-		
-		log.info("display()..");
-		goodsService.display(goodsVO);
-		
-		return "redirect:/goods/list";
-	}
+//	@PostMapping("/display")
+//	public String display(GoodsVO goodsVO) {
+//		
+//		log.info("display()..");
+//		goodsService.display(goodsVO);
+//		
+//		return "redirect:/goods/list";
+//	}
 	
 }
     

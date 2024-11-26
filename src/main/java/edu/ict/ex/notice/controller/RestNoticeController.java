@@ -1,12 +1,15 @@
 package edu.ict.ex.notice.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,7 +67,7 @@ public class RestNoticeController {
 	}
 	
 	//공지사항 등록
-	@PostMapping("/")	// 경로 변수
+	@PostMapping("/create")	// 경로 변수
 	public ResponseEntity<String> write(@RequestBody NoticeVO notice){
 		
 		log.info("write..");
@@ -83,6 +86,42 @@ public class RestNoticeController {
 		return entity;
 	}
 	
-	
+	// 공지사항 진열 미진열 변경
+	@PutMapping("/{seq_no}/status")  // seq_no와 status를 경로 변수와 요청 본문으로 받음
+	public ResponseEntity<Map<String, Object>> changeStatus(
+	    @PathVariable int seq_no, @RequestBody Map<String, Integer> statusMap) {
+
+	    log.info("Change status for seq_no: " + seq_no);
+
+	    Map<String, Object> response = new HashMap<>();
+
+	    try {
+	        int status = statusMap.get("status");  // status 값 추출
+	        noticeService.updateStatus(seq_no, status);  // 서비스에서 상태 업데이트 처리
+	        response.put("status", "success");
+	        response.put("message", "공지사항 상태가 성공적으로 업데이트되었습니다.");
+	        return new ResponseEntity<>(response, HttpStatus.OK);
+	    } catch (Exception e) {
+	        log.error("공지사항 상태 업데이트 중 오류 발생", e);
+	        response.put("status", "error");
+	        response.put("message", e.getMessage());
+	        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	    }
+	}
     
+	//공지사항 대상 선택
+	@PutMapping("/updateTarget/{seq_no}")
+	public ResponseEntity<?> updateTargetTo(@PathVariable int seq_no, @RequestBody Map<String, Integer> request) {
+		int notice_target = request.get("target"); // 상태 값을 받아옴
+		boolean success = noticeService.updateTargetTo(seq_no, notice_target); // 공지 대상을 업데이트
+
+		if (success) {
+			return ResponseEntity.ok().build();
+		} else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("상태 업데이트 실패");
+		}
+	}
+	
+	
+	
 }
