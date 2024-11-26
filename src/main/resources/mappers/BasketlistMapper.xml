@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.ict.ex.basketlist.mapper.BasketlistMapper">
+
+	<resultMap id="BasketlistSummaryResultMap" 		type="edu.ict.ex.basketlist.vo.BasketlistVO">
+		<id property="user_id" 				column="user_id" />
+		<result property="name" 			column="name" />
+		<result property="goods_gubun" 		column="goods_gubun" />
+		<result property="goods_gubun_nm" 	column="goods_gubun_nm" />
+		<result property="cnt" 				column="cnt" />
+	</resultMap>
+
+	<select id="searchBasketlistSummaryList" resultMap="BasketlistSummaryResultMap">
+		<![CDATA[
+			select cc.user_id,cc.name,cc.goods_gubun,
+				case 
+        			when cc.goods_gubun = 1 then '예금'
+        			when cc.goods_gubun = 2 then '펀드'
+        			when cc.goods_gubun = 3 then '외화'
+        			when cc.goods_gubun = 4 then '주식'
+        			else ' '
+        			end as goods_gubun_nm,
+                cc.cnt
+			from
+			( 
+				select bb.user_id,bb.name,bb.goods_gubun,count(bb.goods_gubun) cnt
+				from
+				( 
+					select aa.user_id,aa.name,aa.account_no,aa.seq_no,aa.goods_gubun, 
+						aa.goods_code, aa.goods_name,aa.period_mm,aa.provider_code,aa.tran_unit,
+                        aa.mangi_date,aa.invest_gubun
+					from 
+					( 
+						select a.user_id,a.name, b.account_no,c.goods_code,c.seq_no,d.goods_gubun,d.goods_name,d.provider_code,d.tran_unit,
+ 							d.period_mm,d.invest_gubun,
+ 								case
+    								when d.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(sysdate, d.period_mm) FROM dual),'yyyy/mm/dd')
+    									else ' ' 
+ 										end as mangi_date,   
+ 								case 
+   									when d.goods_gubun = 1 then (select interest_rate  from interestrate_his where goods_code = c.goods_code and period_mm = d.period_mm and status	 = 1)
+    								when d.goods_gubun = 2 then (select trbase_price  from baseprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd')  and status	 = 1)
+    								when d.goods_gubun = 3 then (select exchange_rate  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       										and seq_no = (select max(seq_no)  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+    								when d.goods_gubun = 4 then (select stock_price  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       										and seq_no = (select max(seq_no)  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+ 									else 0
+ 									end as curprice
+							from customer_mas a,account_mas b,basketlist_his c,goods_mas d
+							where b.ref_status = 1
+								and a.user_id = b.user_id
+								and a.user_id = c.user_id
+								and c.status = 1
+								and c.goods_code = d.goods_code
+							) aa
+						) bb
+						group by bb.user_id,bb.name,bb.goods_gubun
+					) cc
+                    where cc.user_id = #{user_id}
+                    order by goods_gubun
+   		]]>
+	</select>
+
+	<resultMap id="BasketlistDetailResultMap" 		type="edu.ict.ex.basketlist.vo.BasketlistDetailVO">
+		<id property="user_id" 				column="user_id" />
+		<result property="name" 			column="name" />
+		<result property="seq_no" 			column="seq_no" />
+		<result property="goods_gubun" 		column="goods_gubun" />
+		<result property="goods_gubun_nm" 	column="goods_gubun_nm" />
+		<result property="goods_code" 		column="goods_code" />
+		<result property="goods_name" 		column="goods_name" />
+		<result property="period_mm" 		column="period_mm" />
+		<result property="mangi_date" 		column="mangi_date" />
+		<result property="iyul" 			column="iyul" />
+		<result property="baseprice" 		column="baseprice" />
+		<result property="exchangeprice" 	column="exchangeprice" />
+		<result property="stockprice" 		column="stockprice" />
+	</resultMap>
+
+	<select id="searchBasketlistDetailList" resultMap="BasketlistDetailResultMap">
+		<![CDATA[
+					select aa.user_id,aa.name,aa.seq_no,aa.goods_gubun, 
+                       	case 
+                    		when aa.goods_gubun = 1 then '예금'
+                    		when aa.goods_gubun = 2 then '펀드'
+                        	when aa.goods_gubun = 3 then '외화'
+                            when aa.goods_gubun = 4 then '주식'
+                            else ' '
+                            end as goods_gubun_nm,
+						aa.goods_code, aa.goods_name,
+                        case when aa.goods_gubun = 1 then to_char(aa.period_mm) else ' ' end as period_mm,
+                        aa.mangi_date,
+						case when aa.goods_gubun = 1 then to_char(aa.curprice,'FM999,999,999,999.00') else ' ' end as iyul,
+						case when aa.goods_gubun = 2 then to_char(aa.curprice,'FM999,999,999,999.00') else ' ' end as baseprice,
+						case when aa.goods_gubun = 3 then to_char(aa.curprice,'FM999,999,999,999.00') else ' ' end as exchangeprice,
+						case when aa.goods_gubun = 4 then to_char(aa.curprice,'FM999,999,999,999') else ' ' end as stockprice
+					from 
+					( 
+						select a.user_id,a.name, b.account_no,c.goods_code,c.seq_no,d.goods_gubun,d.goods_name,d.provider_code,d.tran_unit,
+ 							d.period_mm,d.invest_gubun,
+ 								case
+    								when d.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(sysdate, d.period_mm) FROM dual),'yyyy/mm/dd')
+    									else ' ' 
+ 										end as mangi_date,   
+ 								case 
+   									when d.goods_gubun = 1 then (select interest_rate  from interestrate_his where goods_code = c.goods_code and period_mm = d.period_mm and status	 = 1)
+    								when d.goods_gubun = 2 then (select trbase_price  from baseprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd')  and status	 = 1)
+    								when d.goods_gubun = 3 then (select exchange_rate  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       										and seq_no = (select max(seq_no)  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+    								when d.goods_gubun = 4 then (select stock_price  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       										and seq_no = (select max(seq_no)  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+ 									else 0
+ 									end as curprice
+							from customer_mas a,account_mas b,basketlist_his c,goods_mas d
+							where b.ref_status = 1
+								and a.user_id = b.user_id
+								and a.user_id = c.user_id
+								and c.status = 1
+								and c.goods_code = d.goods_code
+							) aa
+                        where aa.user_id = #{user_id} 
+                    and aa.goods_gubun >= #{st_goods_gubun} and aa.goods_gubun <= #{end_goods_gubun}
+                    order by aa.goods_gubun,aa.seq_no
+
+		]]>
+	</select>
+
+	<update id="deleteBasketlist">
+		<![CDATA[
+			UPDATE basketlist_his
+			SET status  = 9,
+			cancel_date = sysdate
+			WHERE user_id = #{user_id}
+			and seq_no = #{seq_no}
+		]]>
+	</update>
+
+</mapper>

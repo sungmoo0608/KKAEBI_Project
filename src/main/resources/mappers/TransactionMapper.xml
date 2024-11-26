@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.ict.ex.transaction.mapper.TransactionMapper">
+
+	<resultMap id="TransactionResultMap"  	type="edu.ict.ex.transaction.vo.TransactionVO">
+		<id property="user_id" 				column="user_id" />
+		<result property="name" 			column="name" />
+		<result property="account_no" 		column="account_no" />
+		<result property="goods_gubun" 		column="goods_gubun" />
+		<result property="goods_gubun_nm" 	column="goods_gubun_nm" />
+		<result property="goods_code" 		column="goods_code" />
+		<result property="goods_name" 		column="goods_name" />
+		<result property="provider_code" 	column="provider_code" />
+		<result property="provider_nm" 		column="provider_nm" />
+		<result property="tran_unit" 		column="tran_unit" />
+		<result property="period_mm" 		column="period_mm" />
+		<result property="invest_gubun" 	column="invest_gubun" />
+		<result property="mangi_date" 		column="mangi_date" />
+		<result property="curprice" 		column="curprice" />
+	</resultMap>
+
+	<select id="getTransactionInitFetch" resultMap="TransactionResultMap">
+		<![CDATA[
+			select a.user_id,a.name, b.account_no,c.goods_gubun,
+                	case 
+                    	when c.goods_gubun = 1 then '예금'
+                    	when c.goods_gubun = 2 then '펀드'
+                        when c.goods_gubun = 3 then '외화'
+                        when c.goods_gubun = 4 then '주식'
+                        else ' '
+                        end as goods_gubun_nm,
+                	c.goods_code,c.goods_name,c.provider_code,c.tran_unit,
+ 					c.period_mm,c.invest_gubun,d.codevalue_cmmt,
+ 					case
+    					when c.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(sysdate, c.period_mm) FROM dual),'yyyy/mm/dd')
+    					else ' ' 
+ 						end as mangi_date,   
+ 					case 
+   						when c.goods_gubun = 1 then (select interest_rate  from interestrate_his where goods_code = c.goods_code and period_mm = c.period_mm and status	 = 1)
+    					when c.goods_gubun = 2 then (select trbase_price  from baseprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd')  and status	 = 1)
+    					when c.goods_gubun = 3 then (select exchange_rate  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       						and seq_no = (select max(seq_no)  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+    					when c.goods_gubun = 4 then (select stock_price  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       						and seq_no = (select max(seq_no)  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+ 						else 0
+ 						end as curprice
+			from customer_mas a,account_mas b,goods_mas c,code_val d
+			where a.user_id = #{user_id}
+               	and b.ref_status = 1
+				and a.user_id = b.user_id
+				and c.goods_status = 1
+				and c.goods_code = #{goods_code}
+                and d.code_gubun = 'bnk_gubun'
+                and d.code_value = c.provider_code		
+      	]]>
+
+	</select>
+
+
+</mapper>
