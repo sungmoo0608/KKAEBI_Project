@@ -254,7 +254,17 @@
 			LEFT JOIN 
 			    interestrate_his i ON g.goods_code = i.goods_code AND g.period_mm = i.period_mm
 			LEFT JOIN 
-			    exchangerate_his e ON g.goods_code = e.goods_code AND e.base_date = TO_CHAR(SYSDATE, 'YYYYMMDD')
+			        (
+				        SELECT *
+				        FROM exchangerate_his
+				        WHERE base_date = TO_CHAR(SYSDATE, 'YYYYMMDD')
+				        AND seq_no = (
+				            SELECT MAX(seq_no)
+				            FROM exchangerate_his
+				            WHERE goods_code = exchangerate_his.goods_code
+				            AND base_date = TO_CHAR(SYSDATE, 'YYYYMMDD')
+				        )
+				    ) e ON g.goods_code = e.goods_code
 			LEFT JOIN 
 			    baseprice_his b ON g.goods_code = b.goods_code AND b.base_date = TO_CHAR(SYSDATE, 'YYYYMMDD')
 			LEFT JOIN 
@@ -263,7 +273,7 @@
 		]]>  
 	</select>
 	
-	<!-- 모든 목록에서 상품 조회  -->
+	<!-- 모든 목록에서 상품 수정  -->
 	<select id="modifyALLGoods" resultMap="goodsAllMap">
 		<![CDATA[	
 			SELECT 
@@ -339,13 +349,23 @@
 	<select id="getExchangeList"
 		resultMap="GoodsExchangerateProviderMap">
 		<![CDATA[
-			SELECT * FROM goods_mas gm
-			JOIN exchangerate_his eh
-			ON gm.goods_code = eh.goods_code
-			JOIN provider_mas pm 
-			ON gm.provider_code = pm.provider_code
-			where base_date=TO_CHAR(SYSDATE, 'YYYYMMDD')
-			order by gm.goods_code
+		
+		SELECT *
+			FROM goods_mas gm
+			JOIN provider_mas pm ON gm.provider_code = pm.provider_code
+			JOIN (
+			    SELECT *
+			    FROM exchangerate_his eh
+			    WHERE eh.base_date = TO_CHAR(SYSDATE, 'YYYYMMDD')
+			      AND eh.seq_no = (
+			          SELECT MAX(seq_no)
+			          FROM exchangerate_his
+			          WHERE goods_code = eh.goods_code
+			            AND base_date = TO_CHAR(SYSDATE, 'YYYYMMDD')
+			      )
+			) eh ON gm.goods_code = eh.goods_code
+			ORDER BY gm.goods_code
+    
 		]]>
 	</select>
 	
@@ -354,15 +374,22 @@
 	<select id="getExCode"
 		resultMap="goodsExListMap">
 		<![CDATA[
-			SELECT * FROM goods_mas gm
-			JOIN
-			exchangerate_his eh
-			ON gm.goods_code = eh.goods_code
-			JOIN provider_mas pm 
-			ON gm.provider_code = pm.provider_code
-			where base_date=TO_CHAR(SYSDATE, 'YYYYMMDD')
-			and 
-	        gm.goods_code = #{exCode}
+		SELECT *
+			FROM goods_mas gm
+			JOIN provider_mas pm ON gm.provider_code = pm.provider_code
+			JOIN (
+			    SELECT *
+			    FROM exchangerate_his eh
+			    WHERE eh.base_date = TO_CHAR(SYSDATE, 'YYYYMMDD')
+			      AND eh.seq_no = (
+			          SELECT MAX(seq_no)
+			          FROM exchangerate_his
+			          WHERE goods_code = eh.goods_code
+			            AND base_date = TO_CHAR(SYSDATE, 'YYYYMMDD')
+			      )
+			) eh ON gm.goods_code = eh.goods_code
+			WHERE gm.goods_code = #{exCode}
+			ORDER BY gm.goods_code
 		]]>
 	</select>
 	
