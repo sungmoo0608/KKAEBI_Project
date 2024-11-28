@@ -42,9 +42,11 @@ public class LogoutService {
 
     public Cookie createLogoutCookie() {
         // 로그아웃 쿠키 생성 로직
-        Cookie logoutCookie = new Cookie("refresh", "");
+        Cookie logoutCookie = new Cookie("refresh", "/logout");
         logoutCookie.setMaxAge(0); // 쿠키 만료 시간 0으로 설정
         logoutCookie.setPath("/");  // 쿠키의 유효 경로 설정
+        
+        System.out.println("나가");
         return logoutCookie;
     }
 

@@ -2,6 +2,7 @@ package edu.ict.ex.login.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.security.core.userdetails.User;
 
 import edu.ict.ex.login.entity.UserEntity;
 
@@ -12,4 +13,5 @@ public interface UserMapper {
     @Select("SELECT * FROM users WHERE username = #{username}")
     UserEntity findByUsername(String username);
 
+    
 }
