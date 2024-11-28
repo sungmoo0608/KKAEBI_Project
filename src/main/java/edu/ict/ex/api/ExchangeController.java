@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
 
+@CrossOrigin
 @Slf4j
 @RestController
-@CrossOrigin
 @RequestMapping("/api/goods")
 public class ExchangeController {
 

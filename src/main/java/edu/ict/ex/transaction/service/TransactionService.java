@@ -1,7 +1,5 @@
 package edu.ict.ex.transaction.service;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 import edu.ict.ex.transaction.mapper.TransactionMapper;

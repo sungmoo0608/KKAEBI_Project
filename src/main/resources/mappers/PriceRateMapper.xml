@@ -61,18 +61,32 @@
 	<select id="getExchangerateList" resultMap="exchangeRateMap">
 		<![CDATA[
 			SELECT *
-			FROM exchangerate_his
-			WHERE base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
+			FROM exchangerate_his eh
+			WHERE eh.base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
+			  AND eh.seq_no = (
+			      SELECT MAX(seq_no)
+			      FROM exchangerate_his
+			      WHERE goods_code = eh.goods_code
+			        AND base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
+			  )
+			ORDER BY eh.goods_code, eh.base_date
 		]]>
 	</select>
 	
-	<!-- 지정 30일전 외환 상품 가격 -->
+	<!-- 지정 30일전 외환 상품 상세 가격 -->
 	<select id="getExchangeRate" resultMap="exchangeRateMap">
 		<![CDATA[
 			SELECT *
-			FROM exchangerate_his
-			WHERE base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
+			FROM exchangerate_his eh
+			WHERE eh.base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
+			  AND eh.seq_no = (
+			      SELECT MAX(seq_no)
+			      FROM exchangerate_his
+			      WHERE goods_code = eh.goods_code
+			        AND base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
+			  )
 			and goods_code = #{goods_code}
+			ORDER BY eh.goods_code, eh.base_date
 		]]>
 	</select>
 	
@@ -86,7 +100,7 @@
 		]]>
 	</select>
 	
-	<!-- 지정 30일전 외환 상품 가격 -->
+	<!-- 지정 30일전 주식 상품 가격 -->
 	<select id="getStockpirce" resultMap="stockpriceMap">
 		<![CDATA[
 			SELECT *

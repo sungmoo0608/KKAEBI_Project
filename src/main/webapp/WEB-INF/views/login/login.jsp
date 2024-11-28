@@ -39,6 +39,7 @@
 			<div class="d-grid gap-2">
 				<button class="btn btn-primary" type="submit">로그인</button>
 				<button class="btn btn-outline-secondary" onclick="window.location.href='/join'">회원가입</button>
+				<a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=3f7ea18f929ddbd9f0e238fa7a46a459&redirect_uri=http://localhost:8282/auth/kakao/callback"><img height="38px" src="/image/kakao_login_botten.png"></a>
 			</div>
 		</form:form>
 	</div>

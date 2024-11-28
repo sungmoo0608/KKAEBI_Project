@@ -2,6 +2,7 @@ package edu.ict.ex.basketlist.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.ict.ex.basketlist.mapper.BasketlistMapper;
@@ -9,11 +10,12 @@ import edu.ict.ex.basketlist.vo.BasketlistDetailVO;
 import edu.ict.ex.basketlist.vo.BasketlistVO;
 import lombok.RequiredArgsConstructor;
 
+
 @Service
 @RequiredArgsConstructor
 public class BasketlistService{
-    
-    private final BasketlistMapper basketlistMapper;
+	
+    private final  BasketlistMapper basketlistMapper;
     
     public List<BasketlistVO> getBasketlistSummary(String user_id) {
     	
