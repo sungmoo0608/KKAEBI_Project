@@ -3,8 +3,6 @@ package edu.ict.ex.notice.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
 import edu.ict.ex.notice.vo.ReviewVO;
 import edu.ict.ex.simulation.page.Criteria;
