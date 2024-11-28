@@ -15,6 +15,7 @@ public class TransactionVO {
 	private String 	user_id;
 	private String 	name;
 	private String 	account_no;
+	private String 	tr_seqno;
 	private String 	goods_gubun;
 	private String 	goods_gubun_nm;
 	private String 	goods_code;
@@ -26,6 +27,10 @@ public class TransactionVO {
 	private String 	invest_gubun;
 	private String 	mangi_date;
 	private String 	curprice;
-	private String 	tr_numver;
-	private String 	tr_krwamt;
+	private String 	ija_amt;
+	private String 	tr_number;
+	private String 	trforign_amt;
+	private String 	tr_amt;
+	private String 	haeji_amt;
+	
 }
