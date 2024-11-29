@@ -39,16 +39,16 @@
                 	c.goods_code,c.goods_name,c.provider_code,d.codevalue_cmmt provider_nm,
                 	c.tran_unit,c.period_mm,c.invest_gubun,
  					case
-    					when c.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(sysdate, c.period_mm) FROM dual),'yyyy-mm-dd')
+    					when c.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(sysdate, c.period_mm) FROM dual),'YYYYMMDD')
     					else ' ' 
  						end as mangi_date,   
  					case 
    						when c.goods_gubun = 1 then (select interest_rate  from interestrate_his where goods_code = c.goods_code and period_mm = c.period_mm and status	 = 1)
-    					when c.goods_gubun = 2 then (select trbase_price  from baseprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd')  and status	 = 1)
-    					when c.goods_gubun = 3 then (select exchange_rate  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd') 
-       						and seq_no = (select max(seq_no)  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd') and status	 = 1))
-    					when c.goods_gubun = 4 then (select stock_price  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd') 
-       						and seq_no = (select max(seq_no)  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd') and status	 = 1))
+    					when c.goods_gubun = 2 then (select trbase_price  from baseprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'YYYYMMDD')  and status	 = 1)
+    					when c.goods_gubun = 3 then (select exchange_rate  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'YYYYMMDD') 
+       						and seq_no = (select max(seq_no)  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'YYYYMMDD') and status	 = 1))
+    					when c.goods_gubun = 4 then (select stock_price  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'YYYYMMDD') 
+       						and seq_no = (select max(seq_no)  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'YYYYMMDD') and status	 = 1))
  						else 0
  						end as curprice
 			from customer_mas a,account_mas b,goods_mas c,code_val d
@@ -120,16 +120,16 @@
                 	c.goods_code,c.goods_name,c.provider_code,d.codevalue_cmmt provider_nm,
                     c.tran_unit,c.period_mm,c.invest_gubun,
  					case
-    					when c.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(sysdate, c.period_mm) FROM dual),'yyyy/mm/dd')
+    					when c.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(sysdate, c.period_mm) FROM dual),'YYYYMMDD')
     					else ' ' 
  						end as mangi_date,   
  					case 
    						when c.goods_gubun = 1 then (select interest_rate  from interestrate_his where goods_code = c.goods_code and period_mm = c.period_mm and status	 = 1)
-    					when c.goods_gubun = 2 then (select trbase_price  from baseprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd')  and status	 = 1)
-    					when c.goods_gubun = 3 then (select exchange_rate  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
-       						and seq_no = (select max(seq_no)  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
-    					when c.goods_gubun = 4 then (select stock_price  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
-       						and seq_no = (select max(seq_no)  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+    					when c.goods_gubun = 2 then (select trbase_price  from baseprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'YYYYMMDD')  and status	 = 1)
+    					when c.goods_gubun = 3 then (select exchange_rate  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'YYYYMMDD') 
+       						and seq_no = (select max(seq_no)  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'YYYYMMDD') and status	 = 1))
+    					when c.goods_gubun = 4 then (select stock_price  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'YYYYMMDD') 
+       						and seq_no = (select max(seq_no)  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'YYYYMMDD') and status	 = 1))
  						else 0
  						end as curprice
 			from customer_mas a,account_mas b,goods_mas c,code_val d
@@ -202,7 +202,7 @@
                 	c.goods_code,c.goods_name,c.provider_code,d.codevalue_cmmt provider_nm,
                     c.tran_unit,c.period_mm,c.invest_gubun,
  					case
-    					when c.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(e.tr_datetime, c.period_mm) FROM dual),'yyyy/mm/dd')
+    					when c.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(e.tr_datetime, c.period_mm) FROM dual),'YYYYMMDD')
     					else ' ' 
  						end as mangi_date,   
  					e.trbase_num curprice,e.trkwa_amt tr_amt ,e.trforign_amt , e.tr_number
@@ -219,7 +219,7 @@
                     where account_no = b.account_no
                     and goods_code = #{goods_code}
                     and trkwa_amt = #{tr_amt}
-                    and to_char(tr_datetime,'yyyymmdd') =  to_char(sysdate,'yyyymmdd'))
+                    and to_char(tr_datetime,'YYYYMMDD') =  to_char(sysdate,'YYYYMMDD'))
             ) aa     
           )bb  	
       	]]>

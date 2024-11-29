@@ -90,7 +90,7 @@
 							<td><fmt:parseDate value="${notice.notice_st_date}"
 									pattern="yyyy-MM-dd" var="parsedStDate" /> <input type="text"
 								class="form-control" id="notice_st_date" name="notice_st_date"
-								value="<fmt:formatDate value="${parsedStDate}" pattern="yy-MM-dd" />"
+								value="<fmt:formatDate value="${parsedStDate}" pattern="yyyy-MM-dd" />"
 								required></td>
 						</tr>
 
@@ -100,7 +100,7 @@
 							<td><fmt:parseDate value="${notice.notice_end_date}"
 									pattern="yyyy-MM-dd" var="parsedEndDate" /> <input type="text"
 								class="form-control" id="notice_end_date" name="notice_end_date"
-								value="<fmt:formatDate value="${parsedEndDate}" pattern="yy-MM-dd" />"
+								value="<fmt:formatDate value="${parsedEndDate}" pattern="yyyy-MM-dd" />"
 								required></td>
 						</tr>
 
@@ -127,7 +127,7 @@
 									pattern="yyyy-MM-dd" var="parsedRegistDate" /> <input
 								type="text" class="form-control" id="regist_date"
 								name="regist_date"
-								value="<fmt:formatDate value="${parsedRegistDate}" pattern="yy-MM-dd" />"
+								value="<fmt:formatDate value="${parsedRegistDate}" pattern="yyyy-MM-dd" />"
 								readonly></td>
 						</tr>
 
@@ -145,7 +145,7 @@
 									pattern="yyyy-MM-dd" var="parsedLastChgDate" /> <input
 								type="text" class="form-control" id="last_chg_date"
 								name="last_chg_date"
-								value="<fmt:formatDate value="${parsedLastChgDate}" pattern="yy-MM-dd" />"
+								value="<fmt:formatDate value="${parsedLastChgDate}" pattern="yyyy-MM-dd" />"
 								readonly></td>
 						</tr>
 
@@ -163,7 +163,7 @@
 									pattern="yyyy-MM-dd" var="parsedExpireDate" /> <input
 								type="text" class="form-control" id="expire_date"
 								name="expire_date"
-								value="<fmt:formatDate value="${parsedExpireDate}" pattern="yy-MM-dd" />"
+								value="<fmt:formatDate value="${parsedExpireDate}" pattern="yyyy-MM-dd" />"
 								readonly></td>
 						</tr>
 
