@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 30px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            border-radius: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Welcome to the Dashboard</h1>
+        <p>You are logged in!</p>
+        <button id="logoutBtn">Log Out</button>
+    </div>
+
+    <script>
+        // 대시보드 페이지에 접근하기 전에 JWT 토큰을 확인하여 로그인 상태 확인
+        if (!localStorage.getItem('access_token')) {
+            alert('You must be logged in to access this page.');
+            window.location.href = 'login.html';  // 로그인 페이지로 리다이렉트
+        }
+
+        // 로그아웃 처리 함수
+        function logout() {
+            // 로컬 스토리지에서 JWT 토큰 제거
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+
+            // 로그아웃 후 로그인 페이지로 리다이렉트
+            window.location.href = 'login.html';
+        }
+
+        // 로그아웃 버튼 클릭 시 로그아웃 처리
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+    </script>
+
+</body>
+</html>

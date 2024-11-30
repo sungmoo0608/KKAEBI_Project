@@ -3,7 +3,7 @@
 
 <html>
 <head>
-<title>투자 - 예금</title>
+<title>투자 - 펀드</title>
 <style>
  h2 {
         background-color: lightblue; /* 옅은 청색 배경 */
@@ -15,10 +15,9 @@
     </style>
     
 <script>
-        function calculateInterest() {
+        function calculateNumber() {
             // 입력된 투자 금액과 금리를 가져오기
             const curPrice = document.getElementById("curprice").value;
-            const periodMm = document.getElementById("period_mm").value;
             const investAmt = document.getElementById("invest_amt").value;
 
             // 값이 올바른지 확인
@@ -26,22 +25,13 @@
                 alert("유효한 투자 금액을 입력해주세요.");
                 return;
             }
-            let interest = 0; // 이자 변수 초기화
- 
-         // 예치기간에 따른 이자 계산
-            if (periodMm == 6) {
-                interest = Math.ceil((parseFloat(curPrice) / 100) * parseFloat(investAmt) * 0.5);
-            } else if (periodMm == 12) {
-                interest = Math.ceil((parseFloat(curPrice) / 100) * parseFloat(investAmt) * 1.0);
-            } else if (periodMm == 24) {
-                interest = Math.ceil((parseFloat(curPrice) / 100) * parseFloat(investAmt) * 2.0);
-            } else if (periodMm == 36) {
-                interest = Math.ceil((parseFloat(curPrice) / 100) * parseFloat(investAmt) * 3.0);
-            }
+            let tr_number = 0; // 주식수 변수 초기화
+            tr_number = Math.floor(parseFloat(investAmt) / parseFloat(curPrice) );
+			const lastinvestAmt = Math.ceil(parseFloat(tr_number) * parseFloat(curPrice) ); 
+            
             // 결과 표시
-            // 계산된 이자와 수령금액 표시
-    		document.querySelector("input[name='ija_amt']").value = interest.toFixed(0); // 소수점 없는 정수로 표시
-    		document.querySelector("input[name='haeji_amt']").value = (parseFloat(investAmt) + interest).toFixed(0); // 원금 + 이자
+    		document.querySelector("input[name='tr_number']").value = tr_number.toFixed(0); // 소수점 없는 정수로 표시
+    		document.querySelector("input[name='invest_amt']").value = lastinvestAmt.toFixed(0); // 소수점 없는 정수로 표시
         }
     </script>    
 </head>
@@ -52,7 +42,7 @@
             var url = "${pageContext.request.contextPath}/transaction/invest?user_id=" + document.getElementById("user_id").value 
             		+ "&goods_gubun=" + document.getElementById("goods_gubun").value 
             		+ "&goods_code=" + document.getElementById("goods_code").value 
-            		+ "&tr_number=" + document.getElementById("invest_amt").value 
+            		+ "&tr_number=" + document.getElementById("tr_number").value 
             		+ "&tr_price=" + document.getElementById("curprice").value 
             		+ "&tr_amt=" + document.getElementById("invest_amt").value  ;
             window.open(url, '_blank', 'width=1200,height=720');
@@ -66,9 +56,9 @@
 
 <body>
 
-<h2>[상품투자 - 예금]</h2>
+<h2>[상품투자 - 펀드]</h2>
 
-<form action="${pageContext.request.contextPath}/transaction/investdeposot" method="post">
+<form action="${pageContext.request.contextPath}/transaction/investfund" method="post">
 
 <input type="hidden" id = "goods_gubun" name="goods_gubun" value="${transaction.goods_gubun}"/>
 <input type="hidden" id = "goods_code" name="goods_code" value="${transaction.goods_code}"/>
@@ -79,27 +69,18 @@
 <label for="name">고객성명 :</label>
 <input type="text" name="name" value="${transaction.name}" readonly style="background-color: #ffffe0;" /><br/>
 
-<label for="goods_name">상품명 :</label>
+<label for="goods_name">종목명 :</label>
 <input type="text" name="goods_name" value="${transaction.goods_name}" readonly style="background-color: #ffffe0;"/><br/>
 
-<label for="period_mm">예치기간 :</label>
-<input type="text" id = "period_mm"   name="period_mm" value="${transaction.period_mm}" readonly style="background-color: #ffffe0;"/>개월<br/>
+<label for="curprice">기준가 :</label>
+<input type="text" id="curprice"  name="curprice"  value="${transaction.curprice}" readonly style="background-color: #ffffe0;"/>  원<br/>
 
-<label for="curprice">금리 :</label>
-<input type="text" id="curprice"  name="curprice"  value="${transaction.curprice}" readonly style="background-color: #ffffe0;"/>  %<br/>
-
-<label for="invest_amt">예금금액 :</label>
+<label for="invest_amt">투자금액 :</label>
 <input type="text" id="invest_amt"    name="invest_amt" />  원
-<button type="button" onclick="calculateInterest()">이자 계산하기</button><br/>
+<button type="button" onclick="calculateNumber()">매수좌수 계산하기</button><br/>
 
-<label for="mangi_date">만기일자 :</label>
-<input type="text" name="mangi_date" value="${transaction.mangi_date}" readonly style="background-color: #ffffe0;"/><br/>
-
-<label for="ija_amt">만기시 이자금액 :</label>
-<input type="text" name="ija_amt" readonly style="background-color: #ffffe0;"/>  원<br/>
-
-<label for="goods_name">만기시 수령금액 :</label>
-<input type="text" name="haeji_amt" readonly style="background-color: #ffffe0;"/>  원<br/>
+<label for="tr_number">매수주식수 :</label>
+<input type="text"  id="tr_number"   name="tr_number" readonly style="background-color: #ffffe0;"/>  주<br/>
 
 
 <button type="button" 	onclick="execGoodsInvest()"> 투자하기</button><br/>

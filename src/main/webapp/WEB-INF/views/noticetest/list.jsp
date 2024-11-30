@@ -135,8 +135,8 @@ th.notice_manage, td.notice_manage {
 						<td class="notice_title">${notice.notice_title}</td>
 						<td class="notice_regist_date">
 							<!-- 날짜 포맷 변경 --> <fmt:parseDate var="parsedDate"
-								value="${notice.regist_date}" pattern="yy/MM/dd" />
-							<fmt:formatDate value="${parsedDate}" pattern="yy-MM-dd" />
+								value="${notice.regist_date}" pattern="yyyy-MM-dd" />
+							<fmt:formatDate value="${parsedDate}" pattern="yyyy-MM-dd" />
 						</td>
 						<td class="status">${notice.status == 1 ? '활성화' : '비활성화'}</td>
 						<td class="notice_manage"><a
