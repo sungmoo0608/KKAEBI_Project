@@ -136,4 +136,28 @@
 		]]>
 	</update>
 
+	<insert id="insertBasketlist">
+		<![CDATA[
+			INSERT INTO basketlist_his (
+			    user_id, 
+			    seq_no, 
+			    goods_code, 
+			    create_date, 
+			    status, 
+			    cancel_date
+			)
+			SELECT
+			    	#{user_id},    
+				COALESCE(MAX(seq_no), 0) + 1,    
+			 	#{goods_code},     
+				to_char(sysdate,'YYYYMMDD') ,  
+				1,
+				NULL
+			FROM
+				basketlist_his
+			WHERE
+			user_id = #{user_id}
+		]]>
+	</insert>
+
 </mapper>

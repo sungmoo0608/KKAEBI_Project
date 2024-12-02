@@ -57,6 +57,8 @@ public class UserService {
         userVO.setPasswd(encodedPassword); // 암호화된 비밀번호 설정
         userMapper.insertUser(userVO);
         userMapper.insertAuthorities(userVO);
+        userMapper.insertAccount(userVO);
+        
     }
     
 }

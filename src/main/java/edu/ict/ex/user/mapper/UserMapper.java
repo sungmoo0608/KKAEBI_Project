@@ -34,6 +34,11 @@ public interface UserMapper  {
 	
 	//회원가입 + 자동 유저권한 부여   
 	@Insert("insert into authorities(user_id,authority) values(#{user_id},'ROLE_USER')")
-	int insertAuthorities(UserVO userVO);	
+	int insertAuthorities(UserVO userVO);
+	
+	//회원가입 + 자동 통장 번호 부여   
+	@Insert("insert into account_mas(account_no, user_id, create_date, ref_status, balance_amt) values(account_no_seq.nextval, #{user_id}, TO_char(SYSDATE, 'YYYY-MM-DD'),'1','100000000')")
+	int insertAccount(UserVO userVO);	
+	
 	
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,5 +44,12 @@ public class RestBasketlistController {
     public void deleteBasketlistItem(@RequestParam("user_id") String user_id,
                                      @RequestParam("seq_no") String seq_no) {
         basketlistService.deleteBasketlist(user_id, seq_no);
+    }
+    
+    //basketlistrest/basketlistinsert?user_id=user1&goods_code=1000
+    @PutMapping("/basketlistinsert")
+    public void insertBasketlistItem(@RequestParam("user_id") String user_id,
+                                     @RequestParam("goods_code") String goods_code) {
+        basketlistService.insertBasketlist(user_id, goods_code);
     }
 }

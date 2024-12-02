@@ -42,16 +42,15 @@ public class BasketlistService{
         return basketlistMapper.searchBasketlistDetailList(user_id,st_goods_gubun,end_goods_gubun); // Mapper 메서드 호출
     }
 
-    
-    
-    
-
     public void deleteBasketlist(String user_id,String seq_no) {
     	int in_seq_no = Integer.parseInt(seq_no);
     	basketlistMapper.deleteBasketlist(user_id,in_seq_no);
     }
     
-    
+    public void insertBasketlist(String user_id,String goods_code) {
+    	int in_goods_code = Integer.parseInt(goods_code);
+    	basketlistMapper.insertBasketlist(user_id,in_goods_code);
+    }
     
 }
 
