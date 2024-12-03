@@ -69,7 +69,7 @@
     								when aa.goods_gubun = 1 then 
         								(case 
             								when (aa.mangi_date > aa.today) then (trunc(aa.trkwa_amt * aa.trbase_num / 100 / 365 * aa.ilsu))
-            								else trunc(aa.trkwa_amt * aa.trbase_num / 100 / 365 * (SELECT TRUNC(to_date(aa.mangi_date,'yyyy-mm-dd') - TO_DATE(aa.tr_date,'yyyy-mm-dd')) FROM dual)) 
+            								else trunc(aa.trkwa_amt * aa.trbase_num / 100 / 365 * (SELECT TRUNC(to_date(aa.mangi_date,'yyyymmdd') - TO_DATE(aa.tr_date,'yyyymmdd')) FROM dual)) 
         								end )
     								when aa.goods_gubun = 2 then 
         								trunc(aa.tr_number * (aa.curprice - aa.trbase_num) / aa.tran_unit )
@@ -81,22 +81,22 @@
     							end as sonik_amt
 							from 
 							( 
-								select a.user_id,a.name,  a.birthday,to_char(a.create_date,'yyyy-mm-dd') create_date,
+								select a.user_id,a.name,  a.birthday,to_char(a.create_date,'yyyymmdd') create_date,
 										b.account_no,c.goods_code,c.trkwa_amt,c.trforign_amt,
  										c.tr_number,c.trbase_num,d.goods_gubun,d.goods_name,d.provider_code,d.tran_unit,
- 										d.period_mm,d.invest_gubun,to_char(c.tr_datetime,'yyyy-mm-dd') tr_date,to_char(sysdate,'yyyy-mm-dd') today,
+ 										d.period_mm,d.invest_gubun,to_char(c.tr_datetime,'yyyymmdd') tr_date,to_char(sysdate,'yyyymmdd') today,
  										(SELECT trunc(sysdate - c.tr_datetime) AS days_difference FROM dual)  ilsu,
  										case
-    										when d.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(c.tr_datetime, d.period_mm) FROM dual),'yyyy-mm-dd')
-    										else to_char(c.tr_datetime,'yyyy-mm-dd') 
+    										when d.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(c.tr_datetime, d.period_mm) FROM dual),'yyyymmdd')
+    										else to_char(c.tr_datetime,'yyyymmdd') 
  										end as mangi_date,   
  										case 
    											when d.goods_gubun = 1 then (select interest_rate  from interestrate_his where goods_code = c.goods_code and period_mm = d.period_mm and status	 = 1)
-    										when d.goods_gubun = 2 then (select trbase_price  from baseprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd')  and status	 = 1)
-    										when d.goods_gubun = 3 then (select exchange_rate  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd') 
-       													and seq_no = (select max(seq_no)  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd') and status	 = 1))
-    										when d.goods_gubun = 4 then (select stock_price  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd') 
-       													and seq_no = (select max(seq_no)  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd') and status	 = 1))
+    										when d.goods_gubun = 2 then (select trbase_price  from baseprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd')  and status	 = 1)
+    										when d.goods_gubun = 3 then (select exchange_rate  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       													and seq_no = (select max(seq_no)  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+    										when d.goods_gubun = 4 then (select stock_price  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       													and seq_no = (select max(seq_no)  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
  											else c.trbase_num
  										end as curprice
 									from customer_mas a,account_mas b,transaction_his c,goods_mas d
@@ -160,7 +160,7 @@
     						when aa.goods_gubun = 1 then 
         						(case 
             						when (aa.mangi_date > aa.today) then (trunc(aa.trkwa_amt * aa.trbase_num / 100 / 365 * aa.ilsu))
-            						else trunc(aa.trkwa_amt * aa.trbase_num / 100 / 365 * (SELECT TRUNC(to_date(aa.mangi_date,'yyyy-mm-dd') - TO_DATE(aa.tr_date,'yyyy-mm-dd')) FROM dual)) 
+            						else trunc(aa.trkwa_amt * aa.trbase_num / 100 / 365 * (SELECT TRUNC(to_date(aa.mangi_date,'yyyymmdd') - TO_DATE(aa.tr_date,'yyyymmdd')) FROM dual)) 
         							end
         						)
     						when aa.goods_gubun = 2 then 
@@ -173,22 +173,22 @@
     						end as sonik_amt
 					from 
 					( 
-						select a.user_id,a.name,  a.birthday,to_char(a.create_date,'yyyy-mm-dd') create_date,
+						select a.user_id,a.name,  a.birthday,to_char(a.create_date,'yyyymmdd') create_date,
 							b.account_no,c.goods_code,c.trkwa_amt,c.trforign_amt,
  							c.tr_number,c.trbase_num,d.goods_gubun,d.goods_name,d.provider_code,d.tran_unit,
- 							d.period_mm,d.invest_gubun,to_char(c.tr_datetime,'yyyy-mm-dd') tr_date,to_char(sysdate,'yyyy-mm-dd') today,
+ 							d.period_mm,d.invest_gubun,to_char(c.tr_datetime,'yyyymmdd') tr_date,to_char(sysdate,'yyyymmdd') today,
  							(SELECT trunc(sysdate - c.tr_datetime) AS days_difference FROM dual)  ilsu,
  								case
-    								when d.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(c.tr_datetime, d.period_mm) FROM dual),'yyyy-mm-dd')
-    									else to_char(c.tr_datetime,'yyyy-mm-dd') 
+    								when d.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(c.tr_datetime, d.period_mm) FROM dual),'yyyymmdd')
+    									else to_char(c.tr_datetime,'yyyymmdd') 
  										end as mangi_date,   
  								case 
    									when d.goods_gubun = 1 then (select interest_rate  from interestrate_his where goods_code = c.goods_code and period_mm = d.period_mm and status	 = 1)
-    								when d.goods_gubun = 2 then (select trbase_price  from baseprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd')  and status	 = 1)
-    								when d.goods_gubun = 3 then (select exchange_rate  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd') 
-       										and seq_no = (select max(seq_no)  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd') and status	 = 1))
-    								when d.goods_gubun = 4 then (select stock_price  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd') 
-       										and seq_no = (select max(seq_no)  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd') and status	 = 1))
+    								when d.goods_gubun = 2 then (select trbase_price  from baseprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd')  and status	 = 1)
+    								when d.goods_gubun = 3 then (select exchange_rate  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       										and seq_no = (select max(seq_no)  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+    								when d.goods_gubun = 4 then (select stock_price  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       										and seq_no = (select max(seq_no)  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
  									else c.trbase_num
  									end as curprice
 							from customer_mas a,account_mas b,transaction_his c,goods_mas d
@@ -263,7 +263,7 @@
     					when aa.goods_gubun = 1 then 
         					(case 
             					when (aa.mangi_date > aa.today) then (trunc(aa.trkwa_amt * aa.trbase_num / 100 / 365 * aa.ilsu))
-            					else trunc(aa.trkwa_amt * aa.trbase_num / 100 / 365 * (SELECT TRUNC(to_date(aa.mangi_date,'yyyy-mm-dd') - TO_DATE(aa.tr_date,'yyyy-mm-dd')) FROM dual)) 
+            					else trunc(aa.trkwa_amt * aa.trbase_num / 100 / 365 * (SELECT TRUNC(to_date(aa.mangi_date,'yyyymmdd') - TO_DATE(aa.tr_date,'yyyymmdd')) FROM dual)) 
         						end 
         					)
     					when aa.goods_gubun = 2 then 
@@ -276,22 +276,22 @@
     					end as sonik_amt
 				from 
 				( 
-					select a.user_id,a.name,  a.birthday,to_char(a.create_date,'yyyy-mm-dd') create_date,
+					select a.user_id,a.name,  a.birthday,to_char(a.create_date,'yyyymmdd') create_date,
 						b.account_no,c.goods_code,c.trkwa_amt,c.trforign_amt,
  						c.tr_number,c.trbase_num,d.goods_gubun,d.goods_name,d.provider_code,d.tran_unit,
- 						d.period_mm,d.invest_gubun,to_char(c.tr_datetime,'yyyy-mm-dd') tr_date,to_char(sysdate,'yyyy-mm-dd') today,
+ 						d.period_mm,d.invest_gubun,to_char(c.tr_datetime,'yyyymmdd') tr_date,to_char(sysdate,'yyyymmdd') today,
  						(SELECT trunc(sysdate - c.tr_datetime) AS days_difference FROM dual)  ilsu,
  								case
-    								when d.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(c.tr_datetime, d.period_mm) FROM dual),'yyyy-mm-dd')
+    								when d.goods_gubun = 1 then to_char((SELECT ADD_MONTHS(c.tr_datetime, d.period_mm) FROM dual),'yyyymmdd')
     									else ' ' 
  										end as mangi_date,   
  								case 
    									when d.goods_gubun = 1 then (select interest_rate  from interestrate_his where goods_code = c.goods_code and period_mm = d.period_mm and status	 = 1)
-    								when d.goods_gubun = 2 then (select trbase_price  from baseprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd')  and status	 = 1)
-    								when d.goods_gubun = 3 then (select exchange_rate  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd') 
-       									and seq_no = (select max(seq_no)  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd') and status	 = 1))
-    								when d.goods_gubun = 4 then (select stock_price  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd') 
-       									and seq_no = (select max(seq_no)  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyy-mm-dd') and status	 = 1))
+    								when d.goods_gubun = 2 then (select trbase_price  from baseprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd')  and status	 = 1)
+    								when d.goods_gubun = 3 then (select exchange_rate  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       									and seq_no = (select max(seq_no)  from exchangerate_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+    								when d.goods_gubun = 4 then (select stock_price  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       									and seq_no = (select max(seq_no)  from stockprice_his where goods_code = c.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
  											else c.trbase_num
  										end as curprice
 						from 

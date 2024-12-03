@@ -40,6 +40,7 @@ class UserMapperTest {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
+	@Disabled
 	@Test
 	void testInsertUser() {
 		

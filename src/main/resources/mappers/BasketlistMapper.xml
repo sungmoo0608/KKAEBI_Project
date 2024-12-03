@@ -160,4 +160,126 @@
 		]]>
 	</insert>
 
+	<resultMap id="GoodsPriceResultMap"  	type="edu.ict.ex.basketlist.vo.GoodsPriceVO">
+		<id property="goods_code" 				column="goods_code" />
+		<result property="goods_name" 		column="goods_name" />
+		<result property="seqno" 			column="seqno" />
+		<result property="goods_gubun" 		column="goods_gubun" />
+		<result property="goods_gubun_nm" 	column="goods_gubun_nm" />
+		<result property="provider_code" 	column="provider_code" />
+		<result property="provider_nm" 		column="provider_nm" />
+		<result property="period_mm" 		column="period_mm" />
+		<result property="job_gubun" 		column="job_gubun" />
+		<result property="curprice" 		column="curprice" />
+		<result property="befprice" 		column="befprice" />
+	</resultMap>
+
+	<select id="getGoodsPriceInitFetch" resultMap="GoodsPriceResultMap">
+		<![CDATA[
+			 select
+             	a.goods_gubun,
+                case 
+                   	when a.goods_gubun = 1 then '예금'
+                   	when a.goods_gubun = 2 then '펀드'
+                    when a.goods_gubun = 3 then '외화'
+                    when a.goods_gubun = 4 then '주식'
+                    else ' '
+                    end as goods_gubun_nm,
+                a.goods_code,a.goods_name,a.provider_code,b.codevalue_cmmt provider_nm,
+                a.tran_unit,a.period_mm,a.invest_gubun,
+ 				case 
+   					when a.goods_gubun = 1 then (select nvl(max(interest_rate),0)  from interestrate_his where goods_code = a.goods_code and period_mm = a.period_mm and status	 = 1)
+    				when a.goods_gubun = 2 then (select nvl(max(trbase_price),0)  from baseprice_his where goods_code = a.goods_code and base_date = to_char(sysdate,'yyyymmdd')  and status	 = 1)
+    				when a.goods_gubun = 3 then (select nvl(max(exchange_rate),0)  from exchangerate_his where goods_code = a.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       					and seq_no = (select nvl(max(seq_no),0)  from exchangerate_his where goods_code = a.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+    				when a.goods_gubun = 4 then (select nvl(max(stock_price),0)  from stockprice_his where goods_code = a.goods_code and base_date = to_char(sysdate,'yyyymmdd') 
+       					and seq_no = (select nvl(max(seq_no),0)  from stockprice_his where goods_code = a.goods_code and base_date = to_char(sysdate,'yyyymmdd') and status	 = 1))
+ 					else 0
+ 					end as befprice
+			from goods_mas a,code_val b
+			where 	a.goods_code = #{goods_code}
+                and b.code_gubun = 'bnk_gubun'
+                and b.code_value = a.provider_code		
+      	]]>
+
+	</select>
+
+	<insert id="createGoodsPriceDeposit">
+		<![CDATA[
+			INSERT INTO interestrate_his 
+			(goods_code,period_mm,status,interest_rate)
+			VALUES 
+			(
+				#{goods_code}, 
+			 	(select (period_mm)  from goods_mas where goods_code = #{goods_code}),
+				1,
+				#{tr_price}
+			)
+		]]>
+	</insert>
+
+	<!-- 이율 수정 -->
+    <update id="updateGoodsPriceDeposit">
+        UPDATE interestrate_his
+        SET interest_rate = #{tr_price}
+        WHERE goods_code = #{goods_code}
+        and period_mm = (select period_mm  from goods_mas where goods_code = #{goods_code})
+    </update>
+
+	<insert id="createGoodsPriceFund">
+		<![CDATA[
+			INSERT INTO baseprice_his 
+			(goods_code,base_date,status,trbase_price,trxbase_price)
+			VALUES 
+			(
+				#{goods_code}, 
+				to_char(sysdate,'yyyymmdd'),
+				1,
+				#{tr_price},
+				#{tr_price}
+			)
+		]]>
+	</insert>
+
+  <!-- 펀드 기준가 수정 -->
+    <update id="updateGoodsPriceFund">
+        UPDATE baseprice_his
+        SET trbase_price = #{tr_price},
+           trxbase_price = #{tr_price}
+        WHERE goods_code = #{goods_code}
+    </update>
+	
+	<insert id="createGoodsPriceExchange">
+		<![CDATA[
+			INSERT INTO exchangerate_his 
+			(goods_code,base_date,seq_no,status,exchange_rate)
+			VALUES 
+			(
+				#{goods_code}, 
+				to_char(sysdate,'yyyymmdd'),
+				(select (nvl(max(seq_no),0)+1)  from exchangerate_his where goods_code = #{goods_code} and base_date = to_char(sysdate,'yyyymmdd')),
+				1,
+				#{tr_price}
+			)
+		]]>
+	</insert>
+
+	<insert id="createGoodsPriceStock">
+		<![CDATA[
+			INSERT INTO stockprice_his 
+			(goods_code,base_date,seq_no,status,tran_datetime,stock_price)
+			VALUES 
+			(
+				#{goods_code}, 
+				to_char(sysdate,'yyyymmdd'),
+				(select (nvl(max(seq_no),0)+1)  from stockprice_his where goods_code = #{goods_code} and base_date = to_char(sysdate,'yyyymmdd')),
+				1,
+				sysdate,
+				#{tr_price}
+			)
+		]]>
+	</insert>
+
+
+
 </mapper>

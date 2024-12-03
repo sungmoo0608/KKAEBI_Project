@@ -2,12 +2,12 @@ package edu.ict.ex.basketlist.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.ict.ex.basketlist.mapper.BasketlistMapper;
 import edu.ict.ex.basketlist.vo.BasketlistDetailVO;
 import edu.ict.ex.basketlist.vo.BasketlistVO;
+import edu.ict.ex.basketlist.vo.GoodsPriceVO;
 import lombok.RequiredArgsConstructor;
 
 
@@ -50,6 +50,40 @@ public class BasketlistService{
     public void insertBasketlist(String user_id,String goods_code) {
     	int in_goods_code = Integer.parseInt(goods_code);
     	basketlistMapper.insertBasketlist(user_id,in_goods_code);
+    }
+    
+    
+
+    public GoodsPriceVO getGoodsPriceInitFetch(Integer goods_gubun,Integer goods_code) {
+        return basketlistMapper.getGoodsPriceInitFetch(goods_gubun,goods_code);
+    }
+    
+    public void createGoodsPriceDeposit(Integer goods_gubun,Integer goods_code,double tr_price) {
+    	basketlistMapper.createGoodsPriceDeposit(goods_gubun,goods_code,tr_price); // 게시물 생성 메서드
+    }
+    
+    public void updateGoodsPriceDeposit(Integer goods_gubun,Integer goods_code,double tr_price) {
+    	basketlistMapper.updateGoodsPriceDeposit(goods_gubun,goods_code,tr_price); // 게시물 생성 메서드
+    }
+    
+    public void createGoodsPriceFund(Integer goods_gubun,Integer goods_code,double tr_price) {
+    	basketlistMapper.createGoodsPriceFund(goods_gubun,goods_code,tr_price); // 게시물 생성 메서드
+    }
+    
+    public void updateGoodsPriceFund(Integer goods_gubun,Integer goods_code,double tr_price) {
+    	basketlistMapper.updateGoodsPriceFund(goods_gubun,goods_code,tr_price); // 게시물 생성 메서드
+    }
+
+    public void createGoodsPriceExchange(Integer goods_gubun,Integer goods_code,double tr_price) {
+    	basketlistMapper.createGoodsPriceExchange(goods_gubun,goods_code,tr_price); // 게시물 생성 메서드
+    }
+    
+    public void createGoodsPriceStock(Integer goods_gubun,Integer goods_code,double tr_price) {
+    	basketlistMapper.createGoodsPriceStock(goods_gubun,goods_code,tr_price); // 게시물 생성 메서드
+    }
+    
+    public GoodsPriceVO getGoodsPriceRecheckFetch(Integer goods_gubun,Integer goods_code,double tr_price) {
+        return basketlistMapper.getGoodsPriceRecheckFetch(goods_gubun,goods_code,tr_price);
     }
     
 }
