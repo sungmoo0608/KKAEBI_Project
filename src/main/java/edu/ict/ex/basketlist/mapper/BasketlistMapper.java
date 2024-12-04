@@ -18,11 +18,14 @@ public interface BasketlistMapper {
 	// 전체 고객의 실적을 조회
     List<BasketlistDetailVO> searchBasketlistDetailList(String user_id,Integer st_goods_gubun,Integer end_goods_gubun);
 
-    // 게시물 정보를 업데이트합니다.
+    // 장바구니 블라인드 처리
     void deleteBasketlist(String user_id,Integer seq_no);
     
-    // 게시물 정보를 업데이트합니다.
-    void insertBasketlist(String user_id,Integer goods_code);
+	// 장바구니 확인 후 있으면 블라인드 처리
+    void updateBasketlistStatus(String user_id,Integer in_goods_code);
+    
+    // 장바구니 추가
+    void insertBasketlist(String user_id,Integer in_goods_code);
 
 	// 상품 가격 등록 초기화 화면
     GoodsPriceVO getGoodsPriceInitFetch(Integer goods_gubun,Integer goods_code);

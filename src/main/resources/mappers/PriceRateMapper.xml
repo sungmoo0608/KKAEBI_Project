@@ -60,33 +60,48 @@
 	<!-- 30일전 외환 모든 상품 가격 리스트 -->
 	<select id="getExchangerateList" resultMap="exchangeRateMap">
 		<![CDATA[
-			SELECT *
-			FROM exchangerate_his eh
-			WHERE eh.base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
-			  AND eh.seq_no = (
-			      SELECT MAX(seq_no)
-			      FROM exchangerate_his
-			      WHERE goods_code = eh.goods_code
-			        AND base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
-			  )
-			ORDER BY eh.goods_code, eh.base_date
+			SELECT goods_code,
+			       base_date,
+			       seq_no,
+			       status,
+			       exchange_rate
+			  FROM (
+			        SELECT goods_code,
+			               base_date,
+			               seq_no,
+			               status,
+			               exchange_rate,
+			               ROW_NUMBER() OVER (PARTITION BY goods_code, base_date ORDER BY seq_no DESC) AS row_num
+			          FROM exchangerate_his
+			         WHERE TO_DATE(base_date, 'YYYYMMDD') >= SYSDATE - 30  -- 오늘 날짜부터 30일 전까지만
+			           AND TO_DATE(base_date, 'YYYYMMDD') <= SYSDATE      -- 오늘 날짜 이후의 데이터 제외
+			       )
+			 WHERE row_num = 1
 		]]>
 	</select>
 	
 	<!-- 지정 30일전 외환 상품 상세 가격 -->
 	<select id="getExchangeRate" resultMap="exchangeRateMap">
 		<![CDATA[
-			SELECT *
-			FROM exchangerate_his eh
-			WHERE eh.base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
-			  AND eh.seq_no = (
-			      SELECT MAX(seq_no)
-			      FROM exchangerate_his
-			      WHERE goods_code = eh.goods_code
-			        AND base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
-			  )
-			and goods_code = #{goods_code}
-			ORDER BY eh.goods_code, eh.base_date
+			SELECT goods_code,
+			       base_date,
+			       seq_no,
+			       status,
+			       exchange_rate
+			  FROM (
+			        SELECT goods_code,
+			               base_date,
+			               seq_no,
+			               status,
+			               exchange_rate,
+			               ROW_NUMBER() OVER (PARTITION BY goods_code, base_date ORDER BY seq_no DESC) AS row_num
+			          FROM exchangerate_his
+			         WHERE TO_DATE(base_date, 'YYYYMMDD') >= SYSDATE - 30  -- 오늘 날짜부터 30일 전까지만
+			           AND TO_DATE(base_date, 'YYYYMMDD') <= SYSDATE      -- 오늘 날짜 이후의 데이터 제외
+			       )
+			 WHERE row_num = 1
+			and goods_code = #{goods_code}			
+			ORDER BY base_date ASC
 		]]>
 	</select>
 	
@@ -94,18 +109,50 @@
 	<!-- 30일전 주식 모든 상품 가격 리스트 -->
 	<select id="getStockpriceList" resultMap="stockpriceMap">
 		<![CDATA[
-			SELECT *
-			FROM stockprice_his
-			WHERE base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
+			SELECT goods_code,
+			       base_date,
+			       seq_no,
+			       status,
+			       tran_datetime,
+			       stock_price
+			  FROM (
+			        SELECT goods_code,
+			               base_date,
+			               seq_no,
+			               status,
+			               tran_datetime,
+			               stock_price,
+			               ROW_NUMBER() OVER (PARTITION BY goods_code, base_date ORDER BY seq_no DESC) AS row_num
+			          FROM stockprice_his
+			         WHERE TO_DATE(base_date, 'YYYYMMDD') >= SYSDATE - 30 
+			           AND TO_DATE(base_date, 'YYYYMMDD') <= SYSDATE
+			       )
+			 WHERE row_num = 1
 		]]>
 	</select>
 	
 	<!-- 지정 30일전 주식 상품 가격 -->
 	<select id="getStockpirce" resultMap="stockpriceMap">
 		<![CDATA[
-			SELECT *
-			FROM stockprice_his
-			WHERE base_date BETWEEN TO_CHAR(SYSDATE - 30, 'YYYYMMDD') AND TO_CHAR(SYSDATE, 'YYYYMMDD')
+				SELECT goods_code,
+				       base_date,
+				       seq_no,
+				       status,
+				       tran_datetime,
+				       stock_price
+				  FROM (
+				        SELECT goods_code,
+				               base_date,
+				               seq_no,
+				               status,
+				               tran_datetime,
+				               stock_price,
+				               ROW_NUMBER() OVER (PARTITION BY goods_code, base_date ORDER BY seq_no DESC) AS row_num
+				          FROM stockprice_his
+				         WHERE TO_DATE(base_date, 'YYYYMMDD') >= SYSDATE - 30 
+				           AND TO_DATE(base_date, 'YYYYMMDD') <= SYSDATE
+				       )
+				 WHERE row_num = 1
 			and goods_code = #{goods_code}
 		]]>
 	</select>

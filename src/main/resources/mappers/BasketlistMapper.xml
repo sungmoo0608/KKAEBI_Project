@@ -135,7 +135,18 @@
 			and seq_no = #{seq_no}
 		]]>
 	</update>
-
+	
+	<!-- 장바구니 담긴거 확인 -->
+	<update id="updateBasketlistStatus">
+        <![CDATA[
+            UPDATE basketlist_his
+            SET status = 9
+            WHERE user_id = #{user_id}
+              AND goods_code = #{in_goods_code}
+        ]]>
+    </update>
+    
+	<!-- 장바구니 추가 -->
 	<insert id="insertBasketlist">
 		<![CDATA[
 			INSERT INTO basketlist_his (
@@ -149,7 +160,7 @@
 			SELECT
 			    	#{user_id},    
 				COALESCE(MAX(seq_no), 0) + 1,    
-			 	#{goods_code},     
+			 	#{in_goods_code},     
 				to_char(sysdate,'YYYYMMDD') ,  
 				1,
 				NULL
@@ -159,6 +170,9 @@
 			user_id = #{user_id}
 		]]>
 	</insert>
+	
+
+    
 
 	<resultMap id="GoodsPriceResultMap"  	type="edu.ict.ex.basketlist.vo.GoodsPriceVO">
 		<id property="goods_code" 				column="goods_code" />
@@ -247,6 +261,7 @@
         SET trbase_price = #{tr_price},
            trxbase_price = #{tr_price}
         WHERE goods_code = #{goods_code}
+            and base_date = to_char(sysdate,'yyyymmdd')
     </update>
 	
 	<insert id="createGoodsPriceExchange">

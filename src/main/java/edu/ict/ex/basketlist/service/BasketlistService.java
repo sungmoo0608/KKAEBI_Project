@@ -3,6 +3,7 @@ package edu.ict.ex.basketlist.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import edu.ict.ex.basketlist.mapper.BasketlistMapper;
 import edu.ict.ex.basketlist.vo.BasketlistDetailVO;
@@ -47,9 +48,15 @@ public class BasketlistService{
     	basketlistMapper.deleteBasketlist(user_id,in_seq_no);
     }
     
+    @Transactional
     public void insertBasketlist(String user_id,String goods_code) {
     	int in_goods_code = Integer.parseInt(goods_code);
-    	basketlistMapper.insertBasketlist(user_id,in_goods_code);
+    	
+    	// 먼저 업데이트를 실행
+        basketlistMapper.updateBasketlistStatus(user_id, in_goods_code);
+
+        // 그 후에 삽입 작업
+        basketlistMapper.insertBasketlist(user_id, in_goods_code);
     }
     
     

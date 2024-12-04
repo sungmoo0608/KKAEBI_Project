@@ -26,6 +26,7 @@ import edu.ict.ex.goods.vo.GoodsInterestrateProviderVO;
 import edu.ict.ex.goods.vo.GoodsStockListVO;
 import edu.ict.ex.goods.vo.GoodsStockpriceProviderVO;
 import edu.ict.ex.goods.vo.GoodsVO;
+import edu.ict.ex.goods.vo.ProviderVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -36,6 +37,16 @@ public class RestGoodsController {
 
 	@Autowired
 	private GoodsService goodsService;
+	
+	// 금융 회사 목록 조회
+	@GetMapping("/Providerlist")
+	public List<ProviderVO> getProviderList() {
+
+		log.info("Providerlist()...");
+
+		return goodsService.getProviderList();
+	}
+
 
 	// 예금 상품 목록
 	@GetMapping("/Depositlist")

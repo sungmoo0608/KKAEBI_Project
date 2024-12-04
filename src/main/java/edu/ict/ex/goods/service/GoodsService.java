@@ -16,12 +16,20 @@ import edu.ict.ex.goods.vo.GoodsInterestrateProviderVO;
 import edu.ict.ex.goods.vo.GoodsStockListVO;
 import edu.ict.ex.goods.vo.GoodsStockpriceProviderVO;
 import edu.ict.ex.goods.vo.GoodsVO;
+import edu.ict.ex.goods.vo.ProviderVO;
 
 @Service
 public class GoodsService {
 
 	@Autowired
 	private GoodsMapper goodsMapper;
+	
+	// 금융 제공 회사 조회
+	public List<ProviderVO> getProviderList() {
+		System.out.println("getGoodsList() ..");
+
+		return goodsMapper.getProviderList();
+	}
 
 	// 상품 전체 조회
 	public List<Integer> getGoodsList() {
